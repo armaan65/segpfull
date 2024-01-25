@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:segpnew/basePage.dart';
 import 'package:segpnew/screens/upload_page.dart';
 
 class LoginPage extends StatelessWidget{
@@ -39,7 +40,7 @@ class LoginPage extends StatelessWidget{
                 print("Username: $username, Password: $password");
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => UploadPage()),
+                  MaterialPageRoute(builder: (context) => BasePage()),
                 );
               }, 
               child: Text('Login'),

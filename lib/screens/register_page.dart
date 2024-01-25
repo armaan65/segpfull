@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:segpnew/screens/chat.dart';
+import 'package:segpnew/basePage.dart';
 
 class RegisterPage extends StatelessWidget{
   final usernameController = TextEditingController();
@@ -57,7 +57,7 @@ class RegisterPage extends StatelessWidget{
 
             Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => ChatPage()),
+                  MaterialPageRoute(builder: (context) => BasePage()),
                 );
           },
           child: Text('Register'),

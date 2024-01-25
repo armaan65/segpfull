@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:segpnew/screens/chat.dart';
 
 class UploadPage extends StatefulWidget {
   @override
@@ -11,20 +10,6 @@ class UploadPage extends StatefulWidget {
 class _UploadPageState extends State<UploadPage> {
   XFile? _imageFile;
   final ImagePicker _picker = ImagePicker();
-
-  int _selectedIndex = 0;
-  static final List<Widget> _widgetOptions = <Widget>[
-    Text('Home'),
-    Text('Rash Severity'),
-    ChatPage(),
-    Text('Profile'),
-  ];
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,38 +63,6 @@ class _UploadPageState extends State<UploadPage> {
             ),
           ],
         ),
-      ),
-
-      bottomNavigationBar: Material(
-        color: Color(0xFF53CADA),
-        child: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-
-          BottomNavigationBarItem(
-            icon: Icon(Icons.info),
-            label: 'Rash Severity',
-          ),
-
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat),
-            label: 'Chat',
-          ),
-
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
-
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.grey[800],
-        unselectedItemColor: Colors.blue,
-        onTap: _onItemTapped,
-      ),
       ),
     );
   }
