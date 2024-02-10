@@ -60,7 +60,7 @@ class AuthAPI extends ChangeNotifier {
           userId: ID.unique(),
           email: email,
           password: password,
-          name: 'Simon G');
+          name: ' ');
       return user;
     } finally {
       notifyListeners();
