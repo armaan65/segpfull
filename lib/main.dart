@@ -1,9 +1,20 @@
 import 'package:flutter/material.dart';
 import 'screens/login_page.dart';
 import 'screens/register_page.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:segpnew/appwrite/auth_api.dart';
+import 'package:segpnew/screens/login_page.dart';
 
 void main() {
   runApp(MyApp());
+
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => AuthAPI(),
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

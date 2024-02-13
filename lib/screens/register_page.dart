@@ -1,74 +1,113 @@
 import 'package:flutter/material.dart';
-import 'package:segpnew/basePage.dart';
+import 'package:segpnew/screens/chat.dart';
+import 'package:appwrite/appwrite.dart';
+import 'package:segpnew/appwrite/auth_api.dart';
+import 'package:segpnew/screens/login_page.dart';
+import 'package:segpnew/screens/register_page.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
-class RegisterPage extends StatelessWidget{
-  final usernameController = TextEditingController();
-  final passwordController = TextEditingController();
-  final confirmpasswordController = TextEditingController();
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({Key? key}) : super(key: key);
 
   @override
-  Widget build (BuildContext context) {
+  _RegisterPageState createState() => _RegisterPageState();
+}
+
+class _RegisterPageState extends State<RegisterPage> {
+  final emailTextController = TextEditingController();
+  final passwordTextController = TextEditingController();
+
+  createAccount() async {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return Dialog(
+            backgroundColor: Colors.transparent,
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: const [
+                  CircularProgressIndicator(),
+                ]),
+          );
+        });
+    try {
+      final AuthAPI appwrite = context.read<AuthAPI>();
+      await appwrite.createUser(
+        email: emailTextController.text,
+        password: passwordTextController.text,
+      );
+      Navigator.pop(context);
+      const snackbar = SnackBar(content: Text('Account created!'));
+      ScaffoldMessenger.of(context).showSnackBar(snackbar);
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginPage()));
+    } on AppwriteException catch (e) {
+      Navigator.pop(context);
+      showAlert(title: 'Account creation failed', text: e.message.toString());
+    }
+  }
+
+  showAlert({required String title, required String text}) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text(title),
+            content: Text(text),
+            actions: [
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text('Ok'))
+            ],
+          );
+        });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Register'),
-        backgroundColor: Color(0xFF53CADA),
+        title: const Text('Create your account'),
       ),
-    body: Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-
-          TextField(
-            controller: usernameController,
-            decoration: InputDecoration(
-              hintText: 'Username',
-            ),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(32.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              TextField(
+                controller: emailTextController,
+                decoration: const InputDecoration(
+                  labelText: 'Email',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: passwordTextController,
+                decoration: const InputDecoration(
+                  labelText: 'Password',
+                  border: OutlineInputBorder(),
+                ),
+                obscureText: true,
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton.icon(
+                onPressed: () {
+                  createAccount();
+                },
+                icon: const Icon(Icons.app_registration),
+                label: const Text('Sign up'),
+              ),
+            ],
           ),
-
-          TextField(
-            obscureText: true,
-            controller: passwordController,
-            decoration: InputDecoration(
-              hintText: 'Password',
-            ),
-          ),
-          
-          TextField(
-            obscureText: true,
-            controller: confirmpasswordController,
-            decoration: InputDecoration(
-              hintText: 'Confirm Password',
-            ),
-          ),
-          ElevatedButton(onPressed: () {
-            //Obtain values of input fields
-            String username = usernameController.text;
-            String password = passwordController.text;
-            String confirmPassword = confirmpasswordController.text;
-
-            //Checking if password and confirm password are same
-
-            if (password == confirmPassword){
-              print("Username: $username, Password: $password");
-            }
-            else{
-              print("Passwords do not match");
-            };
-
-            Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => BasePage()),
-                );
-          },
-          child: Text('Register'),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Color(0xFF53CADA),
-            foregroundColor: Colors.white
-          )
-          ),
-        ]
+        ),
       ),
-    ),
-  );
+    );
   }
 }
