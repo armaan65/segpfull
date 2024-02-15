@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:segpnew/screens/chat.dart';
 import 'package:appwrite/appwrite.dart';
 import 'package:segpnew/appwrite/auth_api.dart';
+import 'package:segpnew/screens/create_profile.dart';
 import 'package:segpnew/screens/login_page.dart';
 import 'package:segpnew/screens/register_page.dart';
 import 'package:flutter/material.dart';
@@ -42,7 +43,7 @@ class _RegisterPageState extends State<RegisterPage> {
       Navigator.pop(context);
       const snackbar = SnackBar(content: Text('Account created!'));
       ScaffoldMessenger.of(context).showSnackBar(snackbar);
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginPage()));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => CreateProfile()));
     } on AppwriteException catch (e) {
       Navigator.pop(context);
       showAlert(title: 'Account creation failed', text: e.message.toString());
