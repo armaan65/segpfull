@@ -42,7 +42,7 @@ class _LoginPageState extends State<LoginPage> {
         password: passwordTextController.text,
       );
       Navigator.pop(context);
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UploadPage()));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BasePage()));
     } on AppwriteException catch (e) {
       Navigator.pop(context);
       showAlert(title: 'Login failed', text: e.message.toString());
@@ -82,41 +82,6 @@ class _LoginPageState extends State<LoginPage> {
         title: const Text('Rash App'),
       ),
       body: Center(
-<<<<<<< HEAD
-        child: Column(
-          mainAxisAlignment:
-          MainAxisAlignment.center,
-          children: [
-            TextField(
-              controller: usernameController,
-              decoration: InputDecoration(
-              hintText: 'Username',
-            ),
-            ),
-            TextField(
-              obscureText: true,
-              controller: passwordController,
-              decoration: InputDecoration(
-              hintText: 'Password',
-            ),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                //Obtain values of text fields
-                String username = usernameController.text;
-                String password = passwordController.text;
-                //Just testing the input storage with print for now
-                print("Username: $username, Password: $password");
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => BasePage()),
-                );
-              }, 
-              child: Text('Login'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFF53CADA),
-                foregroundColor: Colors.white
-=======
         child: Padding(
           padding: const EdgeInsets.all(32.0),
           child: Column(
@@ -129,7 +94,6 @@ class _LoginPageState extends State<LoginPage> {
                   labelText: 'Email',
                   border: OutlineInputBorder(),
                 ),
->>>>>>> Rahim
               ),
               const SizedBox(height: 16),
               TextField(
