@@ -22,6 +22,9 @@ class _CreateProfileState extends State<CreateProfile> {
   final lastNameController = TextEditingController();
   File? profileImage;
 
+  //Creating global key that identifies Form widget and allows validation of form
+  final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context){
     return Scaffold(
@@ -31,103 +34,136 @@ class _CreateProfileState extends State<CreateProfile> {
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(32.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              TextField(
-                controller: firstNameController,
-                decoration: const InputDecoration(
-                  labelText: 'First name',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.person),
+          child: Form (
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                TextFormField(
+                  controller: firstNameController,
+                  decoration: const InputDecoration(
+                    labelText: 'First name',
+                    border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.person),
+                  ),
+                  //Checking if input is empty
+                  validator: (value) {
+                    if (value == null || value.isEmpty){
+                      return 'Please enter your first name';
+                    }
+                    return null;
+                  },
                 ),
-              ),
-
-              const SizedBox(height: 16),
-              TextField(
-                controller: lastNameController,
-                decoration: const InputDecoration(
-                  labelText: 'Last name',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.person),
+            
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: lastNameController,
+                  decoration: const InputDecoration(
+                    labelText: 'Last name',
+                    border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.person),
+                  ),
+                  validator: (value){
+                    if (value == null || value.isEmpty){
+                      return 'Please enter your last name';
+                    }
+                    return null;
+                  },
                 ),
-              ),
-
-              const SizedBox(height: 16),
-
-              //Image picker widget
-              GestureDetector(
-                onTap: () async{
-                  final ImagePicker _picker = ImagePicker();
-                  //Show two options Gallery and Camera
-                  await showModalBottomSheet(
-                    context: context, 
-                    builder: (context){
-                      return Wrap(
-                        children: [
-                          ListTile(
-                            leading: const Icon(Icons.photo_library),
-                            title: const Text('Gallery'),
-                            onTap: () async {
-                              //Get image from gallery
-                              final XFile? xfile = await _picker.pickImage(source: ImageSource.gallery);
-                              //Convert XFile into file
-                              final File? file = xfile != null ? File(xfile.path) : null;
-                              //Assign image to profileImage
-                              setState(() {
-                                profileImage = file;
-                              });
-                              Navigator.pop(context);
-                            },
-                          ),
-                          ListTile(
-                            leading: const Icon(Icons.camera_alt),
-                            title: const Text('Camera'),
-                            onTap: () async {
-                              //Get image from camera
-                              final XFile? xfile = await _picker.pickImage(source: ImageSource.camera);
-                              final File? file = xfile != null? File(xfile.path) : null;
-                              //Assign image to profileImage
-                              setState(() {
-                                profileImage = file;
-                              });
-                              Navigator.pop(context);
-                            },
-                          ),
-                        ],
+            
+                const SizedBox(height: 16),
+            
+                //Image picker widget
+                GestureDetector(
+                  onTap: () async{
+                    final ImagePicker _picker = ImagePicker();
+                    //Show two options Gallery and Camera
+                    await showModalBottomSheet(
+                      context: context, 
+                      builder: (context){
+                        return Wrap(
+                          children: [
+                            ListTile(
+                              leading: const Icon(Icons.photo_library),
+                              title: const Text('Gallery'),
+                              onTap: () async {
+                                //Get image from gallery
+                                final XFile? xfile = await _picker.pickImage(source: ImageSource.gallery);
+                                //Convert XFile into file
+                                final File? file = xfile != null ? File(xfile.path) : null;
+                                //Assign image to profileImage
+                                setState(() {
+                                  profileImage = file;
+                                });
+                                Navigator.pop(context);
+                              },
+                            ),
+                            ListTile(
+                              leading: const Icon(Icons.camera_alt),
+                              title: const Text('Camera'),
+                              onTap: () async {
+                                //Get image from camera
+                                final XFile? xfile = await _picker.pickImage(source: ImageSource.camera);
+                                final File? file = xfile != null? File(xfile.path) : null;
+                                //Assign image to profileImage
+                                setState(() {
+                                  profileImage = file;
+                                });
+                                Navigator.pop(context);
+                              },
+                            ),
+                          ],
+                        );
+                      },
                       );
-                    },
-                    );
-                },
-
-                  child: Container(
-                    height: 100,
-                    width: 100,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.grey[200],
-                    ),
-                    child: profileImage != null
-                    ? ClipOval(
-                      child: Image.file(
-                        profileImage!,
-                        fit: BoxFit.cover,
+                  },
+            
+                    child: Container(
+                      height: 100,
+                      width: 100,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.grey[200],
                       ),
-                    )
-                    : const Icon(
-                      Icons.camera_alt,
-                      size: 50,
+                      child: profileImage != null
+                      ? ClipOval(
+                        child: Image.file(
+                          profileImage!,
+                          fit: BoxFit.cover,
+                        ),
+                      )
+                      : const Icon(
+                        Icons.camera_alt,
+                        size: 50,
+                        ),
                       ),
-                    ),
+            
+                  
+                ),
+            
+                const SizedBox(height: 16),
+            
+                ElevatedButton(
+                  child: const Text('Next'),
+                  onPressed: () {
+                    if (_formKey.currentState != null && _formKey.currentState!.validate()){
 
-                
-              )
+                      //Add the database logic here
 
-
-
-            ],
-          ), 
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const LoginPage()),
+                      );
+                    }
+                  },
+                  )
+            
+            
+            
+              ],
+            ),
+        ), 
         ),
       ),
     );
