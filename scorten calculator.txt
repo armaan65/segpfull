@@ -1,70 +1,142 @@
-import 'dart:io';
+import 'package:flutter/material.dart';
 
-class ScortenCalculator {
-  static double calculateScorten(List<double> parameters) {
-    double scortenScore = 0;
+void main() => runApp(MyApp());
 
-    for (double parameter in parameters) {
-      scortenScore += parameter;
-    }
-
-    return scortenScore;
-  }
-
-  static double calculateRiskFactor(double scortenScore) {
-    double riskFactor;
-    if (scortenScore <= 1) {
-      riskFactor = 3.2;
-    } else if (scortenScore == 2) {
-      riskFactor = 12.1;
-    } else if (scortenScore == 3) {
-      riskFactor = 35.3;
-    } else if (scortenScore == 4) {
-      riskFactor = 58.3;
-    } else {
-      riskFactor = 90;
-    }
-
-    return riskFactor;
-  }
-
-  static void main() {
-    var options = [
-      "Age >= 40",
-      "Malignancy",
-      "Heart Rate >= 120",
-      "BSA >= 10",
-      "Urea > 10",
-      "Glucose > 14",
-      "Bicarbonate < 20"
-    ];
-
-    print("Select options that apply to you:");
-
-    var parameters = List<double>.filled(options.length, 0);
-
-    for (int i = 0; i < options.length; i++) {
-      stdout.write("${options[i]} (Enter 1 if true, 0 if false): ");
-      try {
-        parameters[i] = double.parse(stdin.readLineSync()!);
-      } catch (e) {
-        print("Invalid input. Please enter a valid number.");
-        i--; // Retry the same input index
-      }
-    }
-
-    // Calculate SCORTEN score
-    double scortenResult = calculateScorten(parameters);
-
-    // Display the result
-    print("SCORTEN Score: $scortenResult");
-
-    double riskFactorResult = calculateRiskFactor(scortenResult);
-    print("Calculated Risk Factor: $riskFactorResult%");
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'SCORTEN Calculator',
+      home: ScortenCalculatorPage(),
+    );
   }
 }
 
-void main() {
-  ScortenCalculator.main();
+class ScortenCalculatorPage extends StatefulWidget {
+  @override
+  _ScortenCalculatorPageState createState() => _ScortenCalculatorPageState();
 }
 
+class _ScortenCalculatorPageState extends State<ScortenCalculatorPage> {
+  TextEditingController ageController = TextEditingController();
+  TextEditingController malignancyController = TextEditingController();
+  TextEditingController heartRateController = TextEditingController();
+  TextEditingController bsaController = TextEditingController();
+  TextEditingController ureaController = TextEditingController();
+  TextEditingController glucoseController = TextEditingController();
+  TextEditingController bicarbonateController = TextEditingController();
+
+  double scortenResult = 0;
+  double riskFactorResult = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('SCORTEN Calculator'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Enter Patient Information:'),
+            TextField(
+              controller: ageController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(labelText: 'Age'),
+            ),
+            TextField(
+              controller: malignancyController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(labelText: 'Malignancy (0 or 1)'),
+            ),
+            TextField(
+              controller: heartRateController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(labelText: 'Heart Rate(beats/minute)'),
+            ),
+            TextField(
+              controller: bsaController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(labelText: 'Body Surface Area (%)'),
+            ),
+            TextField(
+              controller: ureaController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(labelText: 'Serum Urea(mmol/L)'),
+            ),
+            TextField(
+              controller: glucoseController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(labelText: 'Serum Glucose(mmol/L)'),
+            ),
+            TextField(
+              controller: bicarbonateController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(labelText: 'Serum Bicarbonate(mmol/L)'),
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                calculateResults();
+              },
+              child: Text('Calculate'),
+            ),
+            SizedBox(height: 20),
+            Text('SCORTEN Score: $scortenResult'),
+            Text('Calculated Risk Factor: $riskFactorResult%'),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void calculateResults() {
+    double age = double.tryParse(ageController.text) ?? 0;
+    double malignancy = double.tryParse(malignancyController.text) ?? 0;
+    double heartRate = double.tryParse(heartRateController.text) ?? 0;
+    double bsa = double.tryParse(bsaController.text) ?? 0;
+    double urea = double.tryParse(ureaController.text) ?? 0;
+    double glucose = double.tryParse(glucoseController.text) ?? 0;
+    double bicarbonate = double.tryParse(bicarbonateController.text) ?? 0;
+
+    setState(() {
+      scortenResult = calculateScorten(age, malignancy, heartRate, bsa, urea, glucose, bicarbonate);
+      riskFactorResult = calculateriskfactor(age, malignancy, heartRate, bsa, urea, glucose, bicarbonate);
+    });
+  }
+
+  double calculateScorten(double age, double malignancy, double heartRate,
+    double bsa, double urea, double glucose, double bicarbonate) {
+  double agePoints = (age >= 40) ? 1 : 0;
+  double heartRatePoints = (heartRate >= 120) ? 1 : 0;
+  double bsaPoints = (bsa >= 10) ? 1 : 0;
+  double ureaPoints = (urea > 10) ? 1 : 0;
+  double glucosePoints = (glucose > 14) ? 1 : 0;
+  double bicarbonatePoints = (bicarbonate < 20) ? 1 : 0;
+  double malignancyPoints = (malignancy == 1) ? 1 : 0;
+
+  return agePoints + ureaPoints + glucosePoints + bsaPoints + bicarbonatePoints + heartRatePoints + malignancyPoints;
+}
+
+double calculateriskfactor(double age, double malignancy, double heartRate,
+    double bsa, double urea, double glucose, double bicarbonate) {
+  double scortenScore = calculateScorten(age, malignancy, heartRate, bsa, urea, glucose, bicarbonate);
+  double riskfactor;
+
+  if (scortenScore <= 1) {
+    riskfactor = 3.2;
+  } else if (scortenScore == 2) {
+    riskfactor = 12.1;
+  } else if (scortenScore == 3) {
+    riskfactor = 35.3;
+  } else if (scortenScore == 4) {
+    riskfactor = 58.3;
+  } else {
+    riskfactor = 90;
+  }
+
+  return riskfactor;
+}
+}
