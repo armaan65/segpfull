@@ -11,8 +11,8 @@ class _BasePageState extends State<BasePage> {
   int _selectedIndex = 0;
 
   static List<Widget> _widgetOptions = <Widget>[
-    ChatPage(),
     UploadPage(),
+    ChatPage(),
   ];
 
   void _onItemTapped(int index) {
@@ -28,17 +28,17 @@ class _BasePageState extends State<BasePage> {
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.chat),
-            label: 'Chat',
-          ),
-          BottomNavigationBarItem(
             icon: Icon(Icons.camera),
             label: 'Upload',
           ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.chat),
+            label: 'Chat',
+          ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.grey[800],
-        unselectedItemColor: Colors.blue,
+        selectedItemColor: Colors.blue,
+        unselectedItemColor: Colors.grey[800],
         onTap: _onItemTapped,
       ),
     );
