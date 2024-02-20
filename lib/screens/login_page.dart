@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:segpnew/basePage.dart';
 import 'package:segpnew/screens/upload_page.dart';
@@ -6,6 +8,7 @@ import 'package:segpnew/appwrite/auth_api.dart';
 import 'package:segpnew/screens/register_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:segpnew/screens/scorten.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
@@ -42,7 +45,7 @@ class _LoginPageState extends State<LoginPage> {
         password: passwordTextController.text,
       );
       Navigator.pop(context);
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BasePage()));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ScortenCalculatorPage()));
     } on AppwriteException catch (e) {
       Navigator.pop(context);
       showAlert(title: 'Login failed', text: e.message.toString());
