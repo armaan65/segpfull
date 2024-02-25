@@ -4,6 +4,7 @@ import 'package:appwrite/appwrite.dart';
 import 'package:segpnew/appwrite/auth_api.dart';
 import 'package:segpnew/screens/login_page.dart';
 import 'package:segpnew/screens/register_page.dart';
+import 'package:segpnew/screens/scorten.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -153,7 +154,7 @@ class _CreateProfileState extends State<CreateProfile> {
 
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const LoginPage()),
+                        MaterialPageRoute(builder: (context) => ScortenCalculatorPage()),
                       );
                     }
                   },
