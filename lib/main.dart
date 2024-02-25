@@ -35,7 +35,7 @@ class HomePage extends StatelessWidget {
         children: [
           Center(
             child: Text(
-              "Rash App",
+              "SkinSight",
               style: TextStyle(
                 fontSize: 50.0,
                 fontWeight: FontWeight.bold,
