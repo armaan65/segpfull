@@ -46,7 +46,7 @@ class _ScortenCalculatorPageState extends State<ScortenCalculatorPage> {
         title: Text('SCORTEN Calculator'),
         backgroundColor: colorScheme.primary,
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
@@ -165,8 +165,8 @@ class _ScortenCalculatorPageState extends State<ScortenCalculatorPage> {
                 },
                 child: Text('Calculate'),
                 style: ElevatedButton.styleFrom(
-                  primary: colorScheme.secondary,
-                  onPrimary: colorScheme.onSecondary,
+                  backgroundColor: colorScheme.secondary,
+                  foregroundColor: colorScheme.onSecondary,
                 ),
               ),
               SizedBox(height: 20),
