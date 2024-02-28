@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'screens/upload_page.dart';
 import 'screens/chat.dart';
+import 'screens/profile_page.dart'; // Make sure to create this file for ProfilePage
 
 class BasePage extends StatefulWidget {
   @override
@@ -10,9 +11,11 @@ class BasePage extends StatefulWidget {
 class _BasePageState extends State<BasePage> {
   int _selectedIndex = 0;
 
+  // Include ProfilePage in the list of widgets
   static List<Widget> _widgetOptions = <Widget>[
     UploadPage(),
     ChatPage(),
+    ProfilePage(), // Add ProfilePage here
   ];
 
   void _onItemTapped(int index) {
@@ -34,6 +37,10 @@ class _BasePageState extends State<BasePage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.chat),
             label: 'Chat',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.account_circle), // Icon for Profile
+            label: 'Profile', // Label for Profile
           ),
         ],
         currentIndex: _selectedIndex,
