@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:segpnew/screens/doctorui/doctorchat.dart';
 
-class ChatListPage extends StatelessWidget {
+
+class ChatListPage extends StatefulWidget {
+  @override
+  _ChatListPageState createState() => _ChatListPageState();
+}
+
+class _ChatListPageState extends State<ChatListPage> {
   final List<String> chatNames = ['Alice', 'Bob', 'Charlie']; // Example chat names
 
   @override
@@ -38,13 +44,6 @@ class ChatListPage extends StatelessWidget {
             },
           );
         },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Implement new chat creation functionality
-        },
-        backgroundColor: Color(0xFF53CADA), // Darker shade for the FloatingActionButton
-        child: Icon(Icons.message),
       ),
     );
   }
