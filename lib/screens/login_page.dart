@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:segpnew/basePage.dart';
+import 'package:segpnew/screens/doctorui/chatlist.dart';
 import 'package:segpnew/screens/upload_page.dart';
 import 'package:appwrite/appwrite.dart';
 import 'package:segpnew/appwrite/auth_api.dart';
@@ -38,27 +39,24 @@ class _LoginPageState extends State<LoginPage> {
           );
         });
 
-   try {
-  final AuthAPI appwrite = context.read<AuthAPI>();
-  await appwrite.createEmailSession(
-    email: emailTextController.text,
-    password: passwordTextController.text,
-  );
-
-  Navigator.pop(context);
-
-  // Check if the email and password are equal to doctor's details 
-  if (emailTextController.text == 'ak123@gmail.com' &&
-      passwordTextController.text == 'uninott123') {
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Chat()));
-  } else {
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ScortenCalculatorPage()));
+    try {
+      final AuthAPI appwrite = context.read<AuthAPI>();
+      await appwrite.createEmailSession(
+        email: emailTextController.text,
+        password: passwordTextController.text,
+      );
+      Navigator.pop(context);
+    // Check if the email and password are equal to doctor's details 
+    if (emailTextController.text == 'ak123@gmail.com' && passwordTextController.text == 'uninott123') {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ChatListPage()));
+      } else {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ScortenCalculatorPage()));
+      }
+    } on AppwriteException catch (e) {
+      Navigator.pop(context);
+      showAlert(title: 'Login failed', text: e.message.toString());
+    }
   }
-} on AppwriteException catch (e) {
-  Navigator.pop(context);
-  showAlert(title: 'Login failed', text: e.message.toString());
-}
-
 
   showAlert({required String title, required String text}) {
     showDialog(
@@ -86,7 +84,7 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  @override
+	  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -125,8 +123,10 @@ class _LoginPageState extends State<LoginPage> {
               ),
               TextButton(
                 onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => RegisterPage()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => RegisterPage()));
                 },
                 child: const Text('Create Account'),
               ),
