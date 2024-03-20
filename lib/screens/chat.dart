@@ -1,10 +1,10 @@
-import 'dart:async'; 
-
+import 'dart:async';
 import 'package:appwrite/appwrite.dart';
 import 'package:appwrite/models.dart';
 import 'package:flutter/material.dart';
 import 'package:segpnew/appwrite/auth_api.dart';
 import 'package:segpnew/constants/constants.dart';
+import 'package:provider/provider.dart';
 
 class ChatPage extends StatefulWidget {
   @override
@@ -16,7 +16,8 @@ class _ChatPageState extends State<ChatPage> {
   List<Document> _messages = [];
   late Client client;
   late Databases databases;
-  late Timer _timer; // Declare the Timer variable
+  late Timer _timer;
+  String? currentUserEmail;
 
   @override
   void initState() {
@@ -26,35 +27,29 @@ class _ChatPageState extends State<ChatPage> {
         .setProject(APPWRITE_PROJECT_ID);
     databases = Databases(client);
 
-    // Initialize the Timer with a dummy Timer object
-    _timer = Timer(Duration(seconds: 0), () {});
+    // Get the current user's email
+    final authAPI = context.read<AuthAPI>();
+    currentUserEmail = authAPI.email;
 
-    // Start fetching messages periodically
+    _timer = Timer(Duration(seconds: 0), () {});
     startFetchingMessages();
   }
 
   @override
   void dispose() {
+    _timer.cancel();
     super.dispose();
-
-    // Stop fetching messages when the widget is disposed
-    stopFetchingMessages();
   }
 
-  // Function to start fetching messages periodically
   void startFetchingMessages() {
-    // Cancel any existing timer to avoid multiple simultaneous timers
     _timer.cancel();
-
-    // Start a new timer that fetches messages every 5 seconds
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
-      fetchAndSetMessages(); // Fetch messages every 5 seconds
+    _timer = Timer.periodic(Duration(seconds: 5), (timer) {
+      fetchAndSetMessages();
     });
   }
 
-  // Function to stop fetching messages
   void stopFetchingMessages() {
-    _timer.cancel(); // Cancel the timer
+    _timer.cancel();
   }
 
   Future<void> fetchAndSetMessages() async {
@@ -72,20 +67,28 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   Future<void> sendMessage(String messageBody) async {
+    if (messageBody.trim().isEmpty) {
+      print('Message is empty');
+      return;
+    }
+
+    // Retrieve the current user's email from AuthAPI
+    final authAPI = context.read<AuthAPI>();
+    final String currentUserEmail = authAPI.email ?? 'unknown';
+
     try {
-      // Create a new document with the message body
       await databases.createDocument(
         databaseId: APPWRITE_DATABASE_ID,
         collectionId: COLLECTION_ID_MESSAGES,
         documentId: ID.unique(),
-        data: {'body': messageBody, 'user_id': ID.unique()}, // Include the message body in the document data
+        data: {
+          'body': messageBody,
+          'user_id': currentUserEmail, // Set the user_id to the current user's email
+        },
       );
-
-      // Fetch and update the list of messages after sending the message
       await fetchAndSetMessages();
     } catch (error) {
       print('Error sending message: $error');
-      // Handle any errors that occur during message sending
     }
   }
 
@@ -100,9 +103,23 @@ class _ChatPageState extends State<ChatPage> {
               itemCount: _messages.length,
               itemBuilder: (context, index) {
                 final Document message = _messages[index];
-                return ListTile(
-                  title: Text(message.data['body'] ?? 'No text'),
-                  subtitle: Text(message.data['user_id'] ?? 'Unknown sender'),
+                final bool isSentByCurrentUser = message.data['user_id'] == currentUserEmail;
+
+                return Container(
+                  alignment: isSentByCurrentUser ? Alignment.centerRight : Alignment.centerLeft,
+                  padding: EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: isSentByCurrentUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        message.data['body'] ?? 'No text',
+                      ),
+                      Text(
+                        message.data['user_id'] ?? 'Unknown sender',
+                        style: TextStyle(fontSize: 12.0),
+                      ),
+                    ],
+                  ),
                 );
               },
             ),
