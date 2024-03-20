@@ -37,7 +37,7 @@ class _ProfilePageState extends State<ProfilePage> {
           body: Container(
             width: double.infinity,
             padding: EdgeInsets.all(16.0),
-            color: Color(0xFFA7E6FF),
+            color: Colors.white,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
