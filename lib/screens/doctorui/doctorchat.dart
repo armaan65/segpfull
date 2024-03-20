@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class ChatPage extends StatefulWidget {
   final String chatName;
 
-  ChatPage({Key? key, required this.chatName}) : super(key: key);
+  const ChatPage({Key? key, required this.chatName}) : super(key: key);
 
   @override
   _ChatPageState createState() => _ChatPageState();
@@ -26,21 +26,21 @@ class _ChatPageState extends State<ChatPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.chatName),
-        backgroundColor: Color(0xFF53CADA), // Darker shade for the AppBar
+        backgroundColor: const Color(0xFF53CADA), // Darker shade for the AppBar
       ),
       body: Column(
         children: <Widget>[
           Flexible(
             child: ListView.builder(
-              padding: EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(8.0),
               reverse: true,
               itemCount: _messages.length,
               itemBuilder: (_, int index) => _buildMessage(_messages[index]),
             ),
           ),
-          Divider(height: 1.0),
+          const Divider(height: 1.0),
           Container(
-            decoration: BoxDecoration(color: Color(0xFFA7E6FF)), // Lighter shade for the input area
+            decoration: const BoxDecoration(color: Color(0xFFA7E6FF)), // Lighter shade for the input area
             child: _buildTextComposer(),
           ),
         ],
@@ -59,20 +59,20 @@ class _ChatPageState extends State<ChatPage> {
     return IconTheme(
       data: IconThemeData(color: Theme.of(context).colorScheme.secondary),
       child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 8.0),
+        margin: const EdgeInsets.symmetric(horizontal: 8.0),
         child: Row(
           children: <Widget>[
             Flexible(
               child: TextField(
                 controller: _textController,
                 onSubmitted: _handleSubmitted,
-                decoration: InputDecoration.collapsed(hintText: "Send a message"),
+                decoration: const InputDecoration.collapsed(hintText: "Send a message"),
               ),
             ),
             Container(
-              margin: EdgeInsets.symmetric(horizontal: 4.0),
+              margin: const EdgeInsets.symmetric(horizontal: 4.0),
               child: IconButton(
-                icon: Icon(Icons.send),
+                icon: const Icon(Icons.send),
                 onPressed: () => _handleSubmitted(_textController.text),
               ),
             ),

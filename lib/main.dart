@@ -1,38 +1,40 @@
 import 'package:flutter/material.dart';
 import 'screens/login_page.dart';
 import 'screens/register_page.dart';
-import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:segpnew/appwrite/auth_api.dart';
-import 'package:segpnew/screens/login_page.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 
   runApp(
     ChangeNotifierProvider(
       create: (context) => AuthAPI(),
-      child: MyApp(),
+      child: const MyApp(),
     ),
   );
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       home: HomePage(),
     );
   }
 }
 
 class HomePage extends StatelessWidget {
+  const HomePage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [Color(0xFFA7E6FF), Color(0xFF53CADA)],
             begin: Alignment.topCenter,
@@ -63,11 +65,11 @@ class HomePage extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => RegisterPage()),
+                    MaterialPageRoute(builder: (context) => const RegisterPage()),
                   );
                 },
-                icon: Icon(Icons.person_add),
-                label: Text('Register'),
+                icon: const Icon(Icons.person_add),
+                label: const Text('Register'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
                   foregroundColor: Colors.black,
@@ -84,11 +86,11 @@ class HomePage extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => LoginPage()),
+                    MaterialPageRoute(builder: (context) => const LoginPage()),
                   );
                 },
-                icon: Icon(Icons.login), 
-                label: Text('Login'),
+                icon: const Icon(Icons.login), 
+                label: const Text('Login'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
                   foregroundColor: Colors.black,

@@ -3,6 +3,8 @@ import 'package:segpnew/screens/doctorui/doctorchat.dart';
 
 
 class ChatListPage extends StatefulWidget {
+  const ChatListPage({super.key});
+
   @override
   _ChatListPageState createState() => _ChatListPageState();
 }
@@ -14,26 +16,26 @@ class _ChatListPageState extends State<ChatListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Chats'),
-        backgroundColor: Color(0xFF53CADA), // Darker shade for the AppBar
+        title: const Text('Chats'),
+        backgroundColor: const Color(0xFF53CADA), // Darker shade for the AppBar
       ),
       body: ListView.separated(
         itemCount: chatNames.length,
-        separatorBuilder: (context, index) => Divider(),
+        separatorBuilder: (context, index) => const Divider(),
         itemBuilder: (context, index) {
           return ListTile(
             leading: CircleAvatar(
-              backgroundColor: Color(0xFFA7E6FF), // Lighter shade for the CircleAvatar
+              backgroundColor: const Color(0xFFA7E6FF), // Lighter shade for the CircleAvatar
               child: Text(
                 chatNames[index][0],
-                style: TextStyle(color: Colors.white),
+                style: const TextStyle(color: Colors.white),
               ),
             ),
             title: Text(
               chatNames[index],
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
-            subtitle: Text('Last message preview...'), // Placeholder for last message preview
+            subtitle: const Text('Last message preview...'), // Placeholder for last message preview
             onTap: () {
               Navigator.push(
                 context,

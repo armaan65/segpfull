@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:segpnew/basePage.dart';
 
 class ScortenCalculatorPage extends StatefulWidget {
+  const ScortenCalculatorPage({super.key});
+
   @override
   _ScortenCalculatorPageState createState() => _ScortenCalculatorPageState();
 }
@@ -22,12 +24,12 @@ class _ScortenCalculatorPageState extends State<ScortenCalculatorPage> {
 
   @override
   Widget build(BuildContext context) {
-    final TextStyle customFont = TextStyle(
+    const TextStyle customFont = TextStyle(
       fontFamily: 'Roboto',
       fontSize: 16,
     );
 
-    final ColorScheme colorScheme = ColorScheme(
+    const ColorScheme colorScheme = ColorScheme(
       primary: Color(0xFFA7E6FF),
       secondary: Color(0xFF53CADA),
       surface: Colors.white,
@@ -43,7 +45,7 @@ class _ScortenCalculatorPageState extends State<ScortenCalculatorPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('SCORTEN Calculator'),
+        title: const Text('SCORTEN Calculator'),
         backgroundColor: colorScheme.primary,
       ),
       body: SingleChildScrollView(
@@ -60,7 +62,7 @@ class _ScortenCalculatorPageState extends State<ScortenCalculatorPage> {
               TextFormField(
                 controller: ageController,
                 keyboardType: TextInputType.number,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Age',
                   labelStyle: customFont,
                 ),
@@ -74,7 +76,7 @@ class _ScortenCalculatorPageState extends State<ScortenCalculatorPage> {
               TextFormField(
                 controller: malignancyController,
                 keyboardType: TextInputType.number,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Malignancy (0 or 1)',
                   labelStyle: customFont,
                 ),
@@ -88,7 +90,7 @@ class _ScortenCalculatorPageState extends State<ScortenCalculatorPage> {
               TextFormField(
                 controller: heartRateController,
                 keyboardType: TextInputType.number,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Heart Rate(beats/minute)',
                   labelStyle: customFont,
                 ),
@@ -102,7 +104,7 @@ class _ScortenCalculatorPageState extends State<ScortenCalculatorPage> {
               TextFormField(
                 controller: bsaController,
                 keyboardType: TextInputType.number,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Body Surface Area (%)',
                   labelStyle: customFont,
                 ),
@@ -116,7 +118,7 @@ class _ScortenCalculatorPageState extends State<ScortenCalculatorPage> {
               TextFormField(
                 controller: ureaController,
                 keyboardType: TextInputType.number,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Serum Urea(mmol/L)',
                   labelStyle: customFont,
                 ),
@@ -130,7 +132,7 @@ class _ScortenCalculatorPageState extends State<ScortenCalculatorPage> {
               TextFormField(
                 controller: glucoseController,
                 keyboardType: TextInputType.number,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Serum Glucose(mmol/L)',
                   labelStyle: customFont,
                 ),
@@ -144,7 +146,7 @@ class _ScortenCalculatorPageState extends State<ScortenCalculatorPage> {
               TextFormField(
                 controller: bicarbonateController,
                 keyboardType: TextInputType.number,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Serum Bicarbonate(mmol/L)',
                   labelStyle: customFont,
                 ),
@@ -155,7 +157,7 @@ class _ScortenCalculatorPageState extends State<ScortenCalculatorPage> {
                   return null;
                 },
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
                   _formKey.currentState?.validate();
@@ -163,13 +165,13 @@ class _ScortenCalculatorPageState extends State<ScortenCalculatorPage> {
                     calculateResults();
                   }
                 },
-                child: Text('Calculate'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: colorScheme.secondary,
                   foregroundColor: colorScheme.onSecondary,
                 ),
+                child: const Text('Calculate'),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               StatefulBuilder(
                 builder: (BuildContext context, StateSetter setState) {
                   return Column(
@@ -186,24 +188,24 @@ class _ScortenCalculatorPageState extends State<ScortenCalculatorPage> {
                   );
                 },
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState?.validate() ?? false) {
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) {
-                          return BasePage();
+                          return const BasePage();
                         },
                       ),
                     );
                   }
                 },
-                child: Text('Next'),
                 style: ElevatedButton.styleFrom(
                   foregroundColor: colorScheme.secondary,
                   backgroundColor: colorScheme.onSecondary,
                 ),
+                child: const Text('Next'),
               ),
             ],
           ),
