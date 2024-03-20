@@ -1,4 +1,10 @@
+import 'dart:async'; 
+
+import 'package:appwrite/appwrite.dart';
+import 'package:appwrite/models.dart';
 import 'package:flutter/material.dart';
+import 'package:segpnew/appwrite/auth_api.dart';
+import 'package:segpnew/constants/constants.dart';
 
 class ChatPage extends StatefulWidget {
   @override
@@ -7,70 +13,124 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
   final TextEditingController _textController = TextEditingController();
-  final List<String> _messages = [];
+  List<Document> _messages = [];
+  late Client client;
+  late Databases databases;
+  late Timer _timer; // Declare the Timer variable
 
-  void _handleSubmitted(String text) {
-    _textController.clear();
+  @override
+  void initState() {
+    super.initState();
+    client = Client()
+        .setEndpoint(APPWRITE_URL)
+        .setProject(APPWRITE_PROJECT_ID);
+    databases = Databases(client);
 
-    setState(() {
-      _messages.insert(0, text);
+    // Initialize the Timer with a dummy Timer object
+    _timer = Timer(Duration(seconds: 0), () {});
+
+    // Start fetching messages periodically
+    startFetchingMessages();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    // Stop fetching messages when the widget is disposed
+    stopFetchingMessages();
+  }
+
+  // Function to start fetching messages periodically
+  void startFetchingMessages() {
+    // Cancel any existing timer to avoid multiple simultaneous timers
+    _timer.cancel();
+
+    // Start a new timer that fetches messages every 5 seconds
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      fetchAndSetMessages(); // Fetch messages every 5 seconds
     });
+  }
+
+  // Function to stop fetching messages
+  void stopFetchingMessages() {
+    _timer.cancel(); // Cancel the timer
+  }
+
+  Future<void> fetchAndSetMessages() async {
+    try {
+      final documents = await databases.listDocuments(
+        databaseId: APPWRITE_DATABASE_ID,
+        collectionId: COLLECTION_ID_MESSAGES,
+      );
+      setState(() {
+        _messages = documents.documents;
+      });
+    } catch (error) {
+      print(error);
+    }
+  }
+
+  Future<void> sendMessage(String messageBody) async {
+    try {
+      // Create a new document with the message body
+      await databases.createDocument(
+        databaseId: APPWRITE_DATABASE_ID,
+        collectionId: COLLECTION_ID_MESSAGES,
+        documentId: ID.unique(),
+        data: {'body': messageBody, 'user_id': ID.unique()}, // Include the message body in the document data
+      );
+
+      // Fetch and update the list of messages after sending the message
+      await fetchAndSetMessages();
+    } catch (error) {
+      print('Error sending message: $error');
+      // Handle any errors that occur during message sending
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Chat')),
+      appBar: AppBar(title: Text('Doctor Chat')),
       body: Column(
-        children: <Widget>[
-          Flexible(
+        children: [
+          Expanded(
             child: ListView.builder(
-              padding: EdgeInsets.all(8.0),
-              reverse: true,
               itemCount: _messages.length,
-              itemBuilder: (_, int index) => _buildMessage(_messages[index]),
+              itemBuilder: (context, index) {
+                final Document message = _messages[index];
+                return ListTile(
+                  title: Text(message.data['body'] ?? 'No text'),
+                  subtitle: Text(message.data['user_id'] ?? 'Unknown sender'),
+                );
+              },
             ),
           ),
-          Divider(height: 1.0),
-          Container(
-            decoration: BoxDecoration(color: Theme.of(context).cardColor),
-            child: _buildTextComposer(),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _textController,
+                    decoration: InputDecoration(
+                      hintText: 'Type your message...',
+                    ),
+                  ),
+                ),
+                IconButton(
+                  icon: Icon(Icons.send),
+                  onPressed: () {
+                    final String messageBody = _textController.text;
+                    sendMessage(messageBody);
+                    _textController.clear();
+                  },
+                ),
+              ],
+            ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildMessage(String message) {
-    return ListTile(
-      leading: CircleAvatar(child: Text(message[0])),
-      title: Text(message),
-    );
-  }
-
-  Widget _buildTextComposer() {
-    return IconTheme(
-      data: IconThemeData(color: Theme.of(context).colorScheme.secondary),
-      child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 8.0),
-        child: Row(
-          children: <Widget>[
-            Flexible(
-              child: TextField(
-                controller: _textController,
-                onSubmitted: _handleSubmitted,
-                decoration: InputDecoration.collapsed(hintText: "Send a message"),
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 4.0),
-              child: IconButton(
-                icon: Icon(Icons.send),
-                onPressed: () => _handleSubmitted(_textController.text),
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
