@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:segpnew/basePage.dart';
+import 'package:segpnew/screens/doctorui/chatlist.dart';
 import 'package:segpnew/screens/upload_page.dart';
 import 'package:appwrite/appwrite.dart';
 import 'package:segpnew/appwrite/auth_api.dart';
@@ -45,7 +46,12 @@ class _LoginPageState extends State<LoginPage> {
         password: passwordTextController.text,
       );
       Navigator.pop(context);
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ScortenCalculatorPage()));
+    // Check if the email and password are equal to doctor's details 
+    if (emailTextController.text == 'ak123@gmail.com' && passwordTextController.text == 'uninott123') {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ChatListPage()));
+      } else {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ScortenCalculatorPage()));
+      }
     } on AppwriteException catch (e) {
       Navigator.pop(context);
       showAlert(title: 'Login failed', text: e.message.toString());
