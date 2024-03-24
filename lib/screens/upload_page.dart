@@ -5,7 +5,6 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:appwrite/appwrite.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:path/path.dart'; // If you need to use basename() for filenames
 import 'package:segpnew/constants/constants.dart';
 
@@ -34,7 +33,7 @@ class _UploadPageState extends State<UploadPage> {
       .setSelfSigned(); // Adjust based on your SSL setup
   }
 
-  Future<File?> compressImage(File file, String targetPath) async {
+ /* Future<File?> compressImage(File file, String targetPath) async {
     var result = await FlutterImageCompress.compressAndGetFile(
       file.absolute.path,
       targetPath,
@@ -43,119 +42,42 @@ class _UploadPageState extends State<UploadPage> {
       minHeight: 768,
       );
       return result;
-  }
-/*
-Future<void> uploadImageToRoboflow(String filePath) async {
-  var uri = Uri.parse('http://detect.roboflow.com/skin-classification4/5');
-  var request = http.MultipartRequest('POST', uri)
-    ..fields['api_key'] = API_KEY // Replace with your actual API key
-    ..files.add(await http.MultipartFile.fromPath('file', filePath, filename: basename(filePath)));
-
-  http.StreamedResponse streamedResponse = await request.send();
-  int redirectCount = 0;
-
-  // Follow redirects up to 5 times to avoid infinite loops
-  while (streamedResponse.isRedirect && redirectCount < 5) {
-    String? location = streamedResponse.headers['location'];
-    if (location != null) {
-      uri = Uri.parse(location);
-      request = http.MultipartRequest('POST', uri)
-        ..fields['api_key'] = 'YOUR_API_KEY' // Replace with your actual API key
-        ..files.clear() // Clear previous files
-        ..files.add(await http.MultipartFile.fromPath('file', filePath, filename: basename(filePath)));
-      streamedResponse = await request.send();
-    }
-    redirectCount++;
-  }
-
-  // Check the final response
-  if (streamedResponse.statusCode == 200) {
-    print('File uploaded successfully.');
-    // You can use http.Response.fromStream(streamedResponse) to read the body if needed
-  } else {
-    print('Request failed after following redirects with status: ${streamedResponse.statusCode}.');
-    // Optionally, read the response body for more details
-    final responseBody = await http.Response.fromStream(streamedResponse);
-    print('Response body: ${responseBody.body}');
-  }
-}*/
+  }*/
 
   Future<void> uploadImageToRoboflow(String filePath) async {
 
-  var imagePath = filePath;
-  var file = File(imagePath);
-  const roboflowApiKey = API_KEY;
-
-  var bytes = await file.readAsBytes();
-  var encodedFile = base64Encode(bytes);
+  const apiKey = roboflowApiKey;
   
-  final compressedImage = await compressImage(File(filePath), filePath + '_compressed.jpg');
-  if (compressedImage == null) {
-    print('Failed to compress image.');
-    return;
-  }
+   // Encode the image file in base64
+  var file = File(filePath);
+  var bytes = await file.readAsBytes();
+  var base64Image = base64Encode(bytes);
 
-  var uploadURL = "http://detect.roboflow.com/skin-classification4/5?api_key=$roboflowApiKey&name=$imagePath";
+  var encodedBase64Image = Uri.encodeComponent(base64Image);
 
-  print('RequestURL: $uploadURL');
-  var body = 'file=$encodedFile';
+  // Construct the URL (assuming 'name' is a required query parameter)
+  var uploadURL = Uri.parse("https://2578-203-217-129-139.ngrok-free.app/skin-classification4/5?api_key=$apiKey&image=$encodedBase64Image");
 
-  try {
-    var response = await http.post(
-      Uri.parse(uploadURL),
-      headers: {
-        'Content-Type': 'application/x-www-urlencoded',
-        'Content-Language': 'en-US',
-      },
-      body: body,
-    );
+  // Send the request
+  var response = await http.post(
+    uploadURL,
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: {},
+  );
 
-    print('Request Body: $body');
-
-    if (response.statusCode == 307) {
-      var newUrl = response.headers['location'];
-      if (newUrl != null) {
-        response = await http.post(
-          Uri.parse(newUrl),
-          headers: {
-            'Content-Type': 'application/x-www-urlencoded',
-            'Content-Language': 'en-US',
-          },
-          body: body,
-        );
-      }
-    }
-
-    if(response.statusCode != 200) {
-      print('Request failed with status: ${response.statusCode}.');
-      print('Request body: ${response.body}.');
-    }
-
-    if (response.statusCode == 200) {
-      print('Success: ${response.body}');
-    } else {
-      print('Request failed with status: ${response.statusCode}.');
-    }
-
-  } catch (e) {
-    print('An error occured: $e');
-  }
-  }
-  /*var request = http.MultipartRequest('POST', Uri.parse(roboflowUploadEndpoint));
-  request.files.add(await http.MultipartFile.fromPath('_imageFile', filePath));
-  request.headers.addAll({
-    'Authorization': 'Bearer $roboflowApiKey'
-    });
-
-  var response = await request.send();
-
+  // Check the response and print it
   if (response.statusCode == 200) {
     print('Upload successful');
+    print('Response from Roboflow: ${response.body}');
   } else {
-    print('Upload failed');
+    print('Failed to upload image. Status code: ${response.statusCode}');
+    print('Response body: ${response.body}');
   }
-  }*/
 
+
+  }
 
   Future<void> uploadImageToAppwrite(String filePath) async {
 
@@ -238,3 +160,55 @@ Widget build(BuildContext context) {
     );
   }
 }
+
+
+/*
+Future<void> uploadImageToRoboflow(String filePath) async {
+  var uri = Uri.parse('http://detect.roboflow.com/skin-classification4/5');
+  var request = http.MultipartRequest('POST', uri)
+    ..fields['api_key'] = API_KEY // Replace with your actual API key
+    ..files.add(await http.MultipartFile.fromPath('file', filePath, filename: basename(filePath)));
+
+  http.StreamedResponse streamedResponse = await request.send();
+  int redirectCount = 0;
+
+  // Follow redirects up to 5 times to avoid infinite loops
+  while (streamedResponse.isRedirect && redirectCount < 5) {
+    String? location = streamedResponse.headers['location'];
+    if (location != null) {
+      uri = Uri.parse(location);
+      request = http.MultipartRequest('POST', uri)
+        ..fields['api_key'] = 'YOUR_API_KEY' // Replace with your actual API key
+        ..files.clear() // Clear previous files
+        ..files.add(await http.MultipartFile.fromPath('file', filePath, filename: basename(filePath)));
+      streamedResponse = await request.send();
+    }
+    redirectCount++;
+  }
+
+  // Check the final response
+  if (streamedResponse.statusCode == 200) {
+    print('File uploaded successfully.');
+    // You can use http.Response.fromStream(streamedResponse) to read the body if needed
+  } else {
+    print('Request failed after following redirects with status: ${streamedResponse.statusCode}.');
+    // Optionally, read the response body for more details
+    final responseBody = await http.Response.fromStream(streamedResponse);
+    print('Response body: ${responseBody.body}');
+  }
+}*/
+
+  /*var request = http.MultipartRequest('POST', Uri.parse(roboflowUploadEndpoint));
+  request.files.add(await http.MultipartFile.fromPath('_imageFile', filePath));
+  request.headers.addAll({
+    'Authorization': 'Bearer $roboflowApiKey'
+    });
+
+  var response = await request.send();
+
+  if (response.statusCode == 200) {
+    print('Upload successful');
+  } else {
+    print('Upload failed');
+  }
+  }*/
