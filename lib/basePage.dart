@@ -4,8 +4,6 @@ import 'screens/chat.dart';
 import 'screens/profile_page.dart'; // Make sure to create this file for ProfilePage
 
 class BasePage extends StatefulWidget {
-  const BasePage({super.key});
-
   @override
   _BasePageState createState() => _BasePageState();
 }
@@ -14,10 +12,10 @@ class _BasePageState extends State<BasePage> {
   int _selectedIndex = 0;
 
   // Include ProfilePage in the list of widgets
-  static final List<Widget> _widgetOptions = <Widget>[
-    const UploadPage(),
-    const ChatPage(),
-    const ProfilePage(), // Add ProfilePage here
+  static List<Widget> _widgetOptions = <Widget>[
+    UploadPage(),
+    ChatPage(),
+    ProfilePage(), // Add ProfilePage here
   ];
 
   void _onItemTapped(int index) {

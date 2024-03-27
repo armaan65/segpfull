@@ -82,18 +82,18 @@ class _UploadPageState extends State<UploadPage> {
   Future<void> uploadImageToAppwrite(String filePath) async {
 
   try {
-    Storage storage = Storage(client); // Assuming 'client' is already correctly initialized
+    Storage storage = Storage(client);
     var response = await storage.createFile(
       bucketId: BUCKET_ID,
-      fileId: 'unique()', // Automatically generates a unique ID
+      fileId: 'unique()',
       file: InputFile.fromPath(
         path: filePath,
-        filename: basename(filePath), // Assuming you've imported 'package:path/path.dart'
+        filename: basename(filePath),
       ),
     );
 
-    // Now 'response' holds the Response<dynamic> object returned by createFile
-    print('File uploaded: ${response.toString()}'); // Correct use of the response
+
+    print('File uploaded: ${response.toString()}'); 
   } catch (e) {
     print('Error uploading file: $e');
   }

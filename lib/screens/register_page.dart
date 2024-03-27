@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:segpnew/screens/chat.dart';
 import 'package:appwrite/appwrite.dart';
 import 'package:segpnew/appwrite/auth_api.dart';
 import 'package:segpnew/screens/create_profile.dart';
+import 'package:segpnew/screens/login_page.dart';
+import 'package:segpnew/screens/register_page.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -15,35 +20,42 @@ class _RegisterPageState extends State<RegisterPage> {
   final emailTextController = TextEditingController();
   final passwordTextController = TextEditingController();
 
-  createAccount() async {
-    showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          return const Dialog(
-            backgroundColor: Colors.transparent,
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  CircularProgressIndicator(),
-                ]),
-          );
-        });
-    try {
-      final AuthAPI appwrite = context.read<AuthAPI>();
-      await appwrite.createUser(
-        email: emailTextController.text,
-        password: passwordTextController.text,
-      );
-      Navigator.pop(context);
-      const snackbar = SnackBar(content: Text('Account created!'));
-      ScaffoldMessenger.of(context).showSnackBar(snackbar);
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const CreateProfile()));
-    } on AppwriteException catch (e) {
-      Navigator.pop(context);
-      showAlert(title: 'Account creation failed', text: e.message.toString());
-    }
+createAccount() async {
+  showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: const [
+                CircularProgressIndicator(),
+              ]),
+        );
+      });
+  try {
+    final AuthAPI appwrite = context.read<AuthAPI>();
+    await appwrite.createUser(
+      email: emailTextController.text,
+      password: passwordTextController.text,
+    );
+    // Log in the user after account creation
+    await appwrite.createEmailSession(
+      email: emailTextController.text,
+      password: passwordTextController.text,
+    );
+    Navigator.pop(context);
+    const snackbar = SnackBar(content: Text('Account created!'));
+    ScaffoldMessenger.of(context).showSnackBar(snackbar);
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => CreateProfile()));
+  } on AppwriteException catch (e) {
+    Navigator.pop(context);
+    showAlert(title: 'Account creation failed', text: e.message.toString());
   }
+}
+
+
 
   showAlert({required String title, required String text}) {
     showDialog(

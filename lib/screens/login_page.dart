@@ -1,9 +1,14 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:segpnew/basePage.dart';
+import 'package:segpnew/screens/doctorui/chatlist.dart';
+import 'package:segpnew/screens/upload_page.dart';
 import 'package:appwrite/appwrite.dart';
 import 'package:segpnew/appwrite/auth_api.dart';
 import 'package:segpnew/screens/register_page.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:segpnew/screens/scorten.dart';
 import 'package:provider/provider.dart';
 
@@ -24,11 +29,11 @@ class _LoginPageState extends State<LoginPage> {
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) {
-          return const Dialog(
-            backgroundColor: Color.fromARGB(241, 0, 0, 0),
+          return Dialog(
+            backgroundColor: const Color.fromARGB(241, 0, 0, 0),
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
+                children: const [
                   CircularProgressIndicator(),
                 ]),
           );
@@ -41,7 +46,12 @@ class _LoginPageState extends State<LoginPage> {
         password: passwordTextController.text,
       );
       Navigator.pop(context);
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const ScortenCalculatorPage()));
+    // Check if the email and password are equal to doctor's details 
+    if (emailTextController.text == 'ak123@gmail.com' && passwordTextController.text == 'uninott123') {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ChatListPage()));
+      } else {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ScortenCalculatorPage()));
+      }
     } on AppwriteException catch (e) {
       Navigator.pop(context);
       showAlert(title: 'Login failed', text: e.message.toString());
@@ -116,7 +126,7 @@ class _LoginPageState extends State<LoginPage> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const RegisterPage()));
+                          builder: (context) => RegisterPage()));
                 },
                 child: const Text('Create Account'),
               ),

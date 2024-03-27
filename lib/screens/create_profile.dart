@@ -1,5 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:segpnew/screens/chat.dart';
+import 'package:appwrite/appwrite.dart';
+import 'package:segpnew/appwrite/auth_api.dart';
+import 'package:segpnew/screens/login_page.dart';
+import 'package:segpnew/screens/register_page.dart';
 import 'package:segpnew/screens/scorten.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
@@ -70,7 +78,7 @@ class _CreateProfileState extends State<CreateProfile> {
                 //Image picker widget
                 GestureDetector(
                   onTap: () async{
-                    final ImagePicker picker = ImagePicker();
+                    final ImagePicker _picker = ImagePicker();
                     //Show two options Gallery and Camera
                     await showModalBottomSheet(
                       context: context, 
@@ -82,7 +90,7 @@ class _CreateProfileState extends State<CreateProfile> {
                               title: const Text('Gallery'),
                               onTap: () async {
                                 //Get image from gallery
-                                final XFile? xfile = await picker.pickImage(source: ImageSource.gallery);
+                                final XFile? xfile = await _picker.pickImage(source: ImageSource.gallery);
                                 //Convert XFile into file
                                 final File? file = xfile != null ? File(xfile.path) : null;
                                 //Assign image to profileImage
@@ -97,7 +105,7 @@ class _CreateProfileState extends State<CreateProfile> {
                               title: const Text('Camera'),
                               onTap: () async {
                                 //Get image from camera
-                                final XFile? xfile = await picker.pickImage(source: ImageSource.camera);
+                                final XFile? xfile = await _picker.pickImage(source: ImageSource.camera);
                                 final File? file = xfile != null? File(xfile.path) : null;
                                 //Assign image to profileImage
                                 setState(() {
@@ -146,7 +154,7 @@ class _CreateProfileState extends State<CreateProfile> {
 
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const ScortenCalculatorPage()),
+                        MaterialPageRoute(builder: (context) => ScortenCalculatorPage()),
                       );
                     }
                   },

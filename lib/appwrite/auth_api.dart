@@ -13,16 +13,16 @@ class AuthAPI extends ChangeNotifier {
   Client client = Client();
   late final Account account;
 
-  late User _currentUser;
+  User? _currentUser;
 
   AuthStatus _status = AuthStatus.uninitialized;
 
   // Getter methods
-  User get currentUser => _currentUser;
+  User? get currentUser => _currentUser;
   AuthStatus get status => _status;
-  String? get username => _currentUser.name;
-  String? get email => _currentUser.email;
-  String? get userid => _currentUser.$id;
+  String? get username => _currentUser?.name;
+  String? get email => _currentUser?.email;
+  String? get userid => _currentUser?.$id;
 
   // Constructor
   AuthAPI() {
@@ -39,14 +39,18 @@ class AuthAPI extends ChangeNotifier {
     account = Account(client);
   }
 
-  loadUser() async {
+  Future<void> loadUser() async {
+    print("loadUser called");
     try {
       final user = await account.get();
+      print('User data fetched: $user');
       _status = AuthStatus.authenticated;
       _currentUser = user;
     } catch (e) {
+      print('Error in loadUser: $e');
       _status = AuthStatus.unauthenticated;
     } finally {
+      print('loadUser completed');
       notifyListeners();
     }
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:segpnew/basePage.dart';
+import 'package:segpnew/screens/scorten_results.dart';
 
 class ScortenCalculatorPage extends StatefulWidget {
   const ScortenCalculatorPage({super.key});
@@ -171,42 +172,6 @@ class _ScortenCalculatorPageState extends State<ScortenCalculatorPage> {
                 ),
                 child: const Text('Calculate'),
               ),
-              const SizedBox(height: 20),
-              StatefulBuilder(
-                builder: (BuildContext context, StateSetter setState) {
-                  return Column(
-                    children: [
-                      Text(
-                        'SCORTEN Score: $scortenResult',
-                        style: customFont.copyWith(fontSize: 18),
-                      ),
-                      Text(
-                        'Calculated Risk Factor: $riskFactorResult%',
-                        style: customFont.copyWith(fontSize: 18),
-                      ),
-                    ],
-                  );
-                },
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState?.validate() ?? false) {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return const BasePage();
-                        },
-                      ),
-                    );
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: colorScheme.secondary,
-                  backgroundColor: colorScheme.onSecondary,
-                ),
-                child: const Text('Next'),
-              ),
             ],
           ),
         ),
@@ -214,20 +179,31 @@ class _ScortenCalculatorPageState extends State<ScortenCalculatorPage> {
     );
   }
 
-  void calculateResults() {
-    int age = int.parse(ageController.text);
-    int malignancy = int.parse(malignancyController.text);
-    int heartRate = int.parse(heartRateController.text);
-    int bsa = int.parse(bsaController.text);
-    int urea = int.parse(ureaController.text);
-    int glucose = int.parse(glucoseController.text);
-    int bicarbonate = int.parse(bicarbonateController.text);
+void calculateResults() {
+  // Parse the input values
+  int age = int.parse(ageController.text);
+  int malignancy = int.parse(malignancyController.text);
+  int heartRate = int.parse(heartRateController.text);
+  int bsa = int.parse(bsaController.text);
+  int urea = int.parse(ureaController.text);
+  int glucose = int.parse(glucoseController.text);
+  int bicarbonate = int.parse(bicarbonateController.text);
 
-    setState(() {
-      scortenResult = calculateScorten(age, malignancy, heartRate, bsa, urea, glucose, bicarbonate);
-      riskFactorResult = calculateRiskFactor(scortenResult);
-    });
-  }
+  // Calculate the SCORTEN score and risk factor
+  int score = calculateScorten(age, malignancy, heartRate, bsa, urea, glucose, bicarbonate);
+  double riskFactor = calculateRiskFactor(score);
+
+  // Navigate to the results page with the calculated values
+  Navigator.of(context).push(
+    MaterialPageRoute(
+      builder: (context) => ScortenResultsPage(
+        scortenScore: score,
+        riskFactor: riskFactor,
+      ),
+    ),
+  );
+}
+
 
   int calculateScorten(int age, int malignancy, int heartRate, int bsa, int urea, int glucose, int bicarbonate) {
     int agePoints = (age >= 40) ? 1 : 0;
