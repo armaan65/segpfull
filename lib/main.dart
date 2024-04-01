@@ -47,10 +47,10 @@ class HomePage extends StatelessWidget {
                 padding: const EdgeInsets.all(16.0),
                 child: Text(
                   "RashSight",
-                  style: GoogleFonts.lobster(
+                  style: GoogleFonts.montserrat(
                     fontSize: 50.0,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: Colors.black,
                   ),
                 ),
               ),

@@ -12,13 +12,13 @@ class ScortenCalculatorPage extends StatefulWidget {
 class _ScortenCalculatorPageState extends State<ScortenCalculatorPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  TextEditingController ageController = TextEditingController();
-  TextEditingController malignancyController = TextEditingController();
-  TextEditingController heartRateController = TextEditingController();
-  TextEditingController bsaController = TextEditingController();
-  TextEditingController ureaController = TextEditingController();
-  TextEditingController glucoseController = TextEditingController();
-  TextEditingController bicarbonateController = TextEditingController();
+  double _currentAgeValue = 0;
+  double _currentMalignancyValue = 0;
+  double _currentHeartRateValue = 0;
+  double _currentBsaValue = 0;
+  double _currentUreaValue = 0;
+  double _currentGlucoseValue = 0;
+  double _currentBicarbonateValue = 0;
 
   int scortenResult = 0;
   double riskFactorResult = 0;
@@ -60,108 +60,93 @@ class _ScortenCalculatorPageState extends State<ScortenCalculatorPage> {
                 'Enter Patient Information:',
                 style: customFont.copyWith(fontWeight: FontWeight.bold),
               ),
-              TextFormField(
-                controller: ageController,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                  labelText: 'Age',
-                  labelStyle: customFont,
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter age';
-                  }
-                  return null;
+              Text('Age: ${_currentAgeValue.round()}'),
+              Slider(
+                value: _currentAgeValue,
+                min: 0,
+                max: 100,
+                divisions: 100,
+                onChanged: (double value) {
+                  setState(() {
+                    _currentAgeValue = value;
+                  });
                 },
               ),
-              TextFormField(
-                controller: malignancyController,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                  labelText: 'Malignancy (0 or 1)',
-                  labelStyle: customFont,
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter malignancy';
-                  }
-                  return null;
+              Text('Malignancy: ${_currentMalignancyValue.round()}'),
+              Slider(
+                value: _currentMalignancyValue,
+                min: 0,
+                max: 1,
+                divisions: 1,
+                onChanged: (double value) {
+                  setState(() {
+                    _currentMalignancyValue = value;
+                  });
                 },
               ),
-              TextFormField(
-                controller: heartRateController,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                  labelText: 'Heart Rate(beats/minute)',
-                  labelStyle: customFont,
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter heart rate';
-                  }
-                  return null;
+              Text('Heart Rate: ${_currentHeartRateValue.round()}'),
+              Slider(
+                value: _currentHeartRateValue,
+                min: 0,
+                max: 200,
+                divisions: 200,
+                onChanged: (double value) {
+                  setState(() {
+                    _currentHeartRateValue = value;
+                  });
                 },
               ),
-              TextFormField(
-                controller: bsaController,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                  labelText: 'Body Surface Area (%)',
-                  labelStyle: customFont,
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter body surface area';
-                  }
-                  return null;
+              Text('Body Surface Area: ${_currentBsaValue.round()}'),
+              Slider(
+                value: _currentBsaValue,
+                min: 0,
+                max: 100,
+                divisions: 100,
+                onChanged: (double value) {
+                  setState(() {
+                    _currentBsaValue = value;
+                  });
                 },
               ),
-              TextFormField(
-                controller: ureaController,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                  labelText: 'Serum Urea(mmol/L)',
-                  labelStyle: customFont,
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter serum urea';
-                  }
-                  return null;
+              Text('Serum Urea: ${_currentUreaValue.round()}'),
+              Slider(
+                value: _currentUreaValue,
+                min: 0,
+                max: 50,
+                divisions: 50,
+                onChanged: (double value) {
+                  setState(() {
+                    _currentUreaValue = value;
+                  });
                 },
               ),
-              TextFormField(
-                controller: glucoseController,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                  labelText: 'Serum Glucose(mmol/L)',
-                  labelStyle: customFont,
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter serum glucose';
-                  }
-                  return null;
+              Text('Serum Glucose: ${_currentGlucoseValue.round()}'),
+              Slider(
+                value: _currentGlucoseValue,
+                min: 0,
+                max: 50,
+                divisions: 50,
+                onChanged: (double value) {
+                  setState(() {
+                    _currentGlucoseValue = value;
+                  });
                 },
               ),
-              TextFormField(
-                controller: bicarbonateController,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                  labelText: 'Serum Bicarbonate(mmol/L)',
-                  labelStyle: customFont,
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter serum bicarbonate';
-                  }
-                  return null;
+              Text('Serum Bicarbonate: ${_currentBicarbonateValue.round()}'),
+              Slider(
+                value: _currentBicarbonateValue,
+                min: 0,
+                max: 50,
+                divisions: 50,
+                onChanged: (double value) {
+                  setState(() {
+                    _currentBicarbonateValue = value;
+                  });
                 },
               ),
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  _formKey.currentState?.validate();
                   if (_formKey.currentState?.validate() ?? false) {
                     calculateResults();
                   }
@@ -179,31 +164,30 @@ class _ScortenCalculatorPageState extends State<ScortenCalculatorPage> {
     );
   }
 
-void calculateResults() {
-  // Parse the input values
-  int age = int.parse(ageController.text);
-  int malignancy = int.parse(malignancyController.text);
-  int heartRate = int.parse(heartRateController.text);
-  int bsa = int.parse(bsaController.text);
-  int urea = int.parse(ureaController.text);
-  int glucose = int.parse(glucoseController.text);
-  int bicarbonate = int.parse(bicarbonateController.text);
+  void calculateResults() {
+    // Parse the input values
+    int age = _currentAgeValue.round();
+    int malignancy = _currentMalignancyValue.round();
+    int heartRate = _currentHeartRateValue.round();
+    int bsa = _currentBsaValue.round();
+    int urea = _currentUreaValue.round();
+    int glucose = _currentGlucoseValue.round();
+    int bicarbonate = _currentBicarbonateValue.round();
 
-  // Calculate the SCORTEN score and risk factor
-  int score = calculateScorten(age, malignancy, heartRate, bsa, urea, glucose, bicarbonate);
-  double riskFactor = calculateRiskFactor(score);
+    // Calculate the SCORTEN score and risk factor
+    int score = calculateScorten(age, malignancy, heartRate, bsa, urea, glucose, bicarbonate);
+    double riskFactor = calculateRiskFactor(score);
 
-  // Navigate to the results page with the calculated values
-  Navigator.of(context).push(
-    MaterialPageRoute(
-      builder: (context) => ScortenResultsPage(
-        scortenScore: score,
-        riskFactor: riskFactor,
+    // Navigate to the results page with the calculated values
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => ScortenResultsPage(
+          scortenScore: score,
+          riskFactor: riskFactor,
+        ),
       ),
-    ),
-  );
-}
-
+    );
+  }
 
   int calculateScorten(int age, int malignancy, int heartRate, int bsa, int urea, int glucose, int bicarbonate) {
     int agePoints = (age >= 40) ? 1 : 0;
