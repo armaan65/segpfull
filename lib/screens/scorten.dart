@@ -60,89 +60,152 @@ class _ScortenCalculatorPageState extends State<ScortenCalculatorPage> {
                 'Enter Patient Information:',
                 style: customFont.copyWith(fontWeight: FontWeight.bold),
               ),
-              Text('Age: ${_currentAgeValue.round()}'),
-              Slider(
-                value: _currentAgeValue,
-                min: 0,
-                max: 100,
-                divisions: 100,
-                onChanged: (double value) {
-                  setState(() {
-                    _currentAgeValue = value;
-                  });
-                },
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      Text('Age: ${_currentAgeValue.round()}'),
+                      Slider(
+                        value: _currentAgeValue,
+                        min: 0,
+                        max: 100,
+                        divisions: 100,
+                        onChanged: (double value) {
+                          setState(() {
+                            _currentAgeValue = value;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                ),
               ),
-              Text('Malignancy: ${_currentMalignancyValue.round()}'),
-              Slider(
-                value: _currentMalignancyValue,
-                min: 0,
-                max: 1,
-                divisions: 1,
-                onChanged: (double value) {
-                  setState(() {
-                    _currentMalignancyValue = value;
-                  });
-                },
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      Text('Malignancy: ${_currentMalignancyValue.round()}'),
+                      Slider(
+                        value: _currentMalignancyValue,
+                        min: 0,
+                        max: 1,
+                        divisions: 1,
+                        onChanged: (double value) {
+                          setState(() {
+                            _currentMalignancyValue = value;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                ),
               ),
-              Text('Heart Rate: ${_currentHeartRateValue.round()}'),
-              Slider(
-                value: _currentHeartRateValue,
-                min: 0,
-                max: 200,
-                divisions: 200,
-                onChanged: (double value) {
-                  setState(() {
-                    _currentHeartRateValue = value;
-                  });
-                },
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      Text('Heart Rate: ${_currentHeartRateValue.round()}'),
+                      Slider(
+                        value: _currentHeartRateValue,
+                        min: 0,
+                        max: 200,
+                        divisions: 200,
+                        onChanged: (double value) {
+                          setState(() {
+                            _currentHeartRateValue = value;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                ),
               ),
-              Text('Body Surface Area: ${_currentBsaValue.round()}'),
-              Slider(
-                value: _currentBsaValue,
-                min: 0,
-                max: 100,
-                divisions: 100,
-                onChanged: (double value) {
-                  setState(() {
-                    _currentBsaValue = value;
-                  });
-                },
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      Text('Body Surface Area: ${_currentBsaValue.round()}'),
+                      Slider(
+                        value: _currentBsaValue,
+                        min: 0,
+                        max: 100,
+                        divisions: 100,
+                        onChanged: (double value) {
+                          setState(() {
+                            _currentBsaValue = value;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                ),
               ),
-              Text('Serum Urea: ${_currentUreaValue.round()}'),
-              Slider(
-                value: _currentUreaValue,
-                min: 0,
-                max: 50,
-                divisions: 50,
-                onChanged: (double value) {
-                  setState(() {
-                    _currentUreaValue = value;
-                  });
-                },
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      Text('Serum Urea: ${_currentUreaValue.round()}'),
+                      Slider(
+                        value: _currentUreaValue,
+                        min: 0,
+                        max: 50,
+                        divisions: 50,
+                        onChanged: (double value) {
+                          setState(() {
+                            _currentUreaValue = value;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                ),
               ),
-              Text('Serum Glucose: ${_currentGlucoseValue.round()}'),
-              Slider(
-                value: _currentGlucoseValue,
-                min: 0,
-                max: 50,
-                divisions: 50,
-                onChanged: (double value) {
-                  setState(() {
-                    _currentGlucoseValue = value;
-                  });
-                },
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      Text('Serum Glucose: ${_currentGlucoseValue.round()}'),
+                      Slider(
+                        value: _currentGlucoseValue,
+                        min: 0,
+                        max: 50,
+                        divisions: 50,
+                        onChanged: (double value) {
+                          setState(() {
+                            _currentGlucoseValue = value;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                ),
               ),
-              Text('Serum Bicarbonate: ${_currentBicarbonateValue.round()}'),
-              Slider(
-                value: _currentBicarbonateValue,
-                min: 0,
-                max: 50,
-                divisions: 50,
-                onChanged: (double value) {
-                  setState(() {
-                    _currentBicarbonateValue = value;
-                  });
-                },
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      Text('Serum Bicarbonate: ${_currentBicarbonateValue.round()}'),
+                      Slider(
+                        value: _currentBicarbonateValue,
+                        min: 0,
+                        max: 50,
+                        divisions: 50,
+                        onChanged: (double value) {
+                          setState(() {
+                            _currentBicarbonateValue = value;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                ),
               ),
               const SizedBox(height: 20),
               ElevatedButton(
