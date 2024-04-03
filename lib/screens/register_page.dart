@@ -19,67 +19,73 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   final emailTextController = TextEditingController();
   final passwordTextController = TextEditingController();
+  bool loading = false;
 
-createAccount() async {
-  showDialog(
+  // Function to create a new account
+  createAccount() async {
+    showDialog(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
         return Dialog(
-          backgroundColor: Colors.transparent,
+          backgroundColor: Colors.transparent, // Use transparent background
           child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: const [
-                CircularProgressIndicator(),
-              ]),
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: const [
+              CircularProgressIndicator(),
+            ],
+          ),
         );
-      });
-  try {
-    final AuthAPI appwrite = context.read<AuthAPI>();
-    await appwrite.createUser(
-      email: emailTextController.text,
-      password: passwordTextController.text,
+      },
     );
-    // Log in the user after account creation
-    await appwrite.createEmailSession(
-      email: emailTextController.text,
-      password: passwordTextController.text,
-    );
-    Navigator.pop(context);
-    const snackbar = SnackBar(content: Text('Account created!'));
-    ScaffoldMessenger.of(context).showSnackBar(snackbar);
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => CreateProfile()));
-  } on AppwriteException catch (e) {
-    Navigator.pop(context);
-    showAlert(title: 'Account creation failed', text: e.message.toString());
+
+    try {
+      final AuthAPI appwrite = context.read<AuthAPI>();
+      await appwrite.createUser(
+        email: emailTextController.text,
+        password: passwordTextController.text,
+      );
+      // Log in the user after account creation
+      await appwrite.createEmailSession(
+        email: emailTextController.text,
+        password: passwordTextController.text,
+      );
+      Navigator.pop(context);
+      const snackbar = SnackBar(content: Text('Account created!'));
+      ScaffoldMessenger.of(context).showSnackBar(snackbar);
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => CreateProfile())); // Navigate to CreateProfile screen
+    } on AppwriteException catch (e) {
+      Navigator.pop(context);
+      showAlert(title: 'Account creation failed', text: e.message.toString());
+    }
   }
-}
 
-
-
+  // Show an alert dialog
   showAlert({required String title, required String text}) {
     showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text(title),
-            content: Text(text),
-            actions: [
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Text('Ok'))
-            ],
-          );
-        });
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(text),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('Ok'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Create your account'),
+        title: const Text('Create your account'), // Custom app bar title
       ),
       body: Center(
         child: Padding(
@@ -110,7 +116,7 @@ createAccount() async {
                   createAccount();
                 },
                 icon: const Icon(Icons.app_registration),
-                label: const Text('Sign up'),
+                label: const Text('Sign up'), // Improved button label
               ),
             ],
           ),

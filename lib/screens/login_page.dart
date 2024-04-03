@@ -26,18 +26,20 @@ class _LoginPageState extends State<LoginPage> {
 
   signIn() async {
     showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          return Dialog(
-            backgroundColor: const Color.fromARGB(241, 0, 0, 0),
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: const [
-                  CircularProgressIndicator(),
-                ]),
-          );
-        });
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: const Color.fromARGB(241, 0, 0, 0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: const [
+              CircularProgressIndicator(),
+            ],
+          ),
+        );
+      },
+    );
 
     try {
       final AuthAPI appwrite = context.read<AuthAPI>();
@@ -46,11 +48,19 @@ class _LoginPageState extends State<LoginPage> {
         password: passwordTextController.text,
       );
       Navigator.pop(context);
-    // Check if the email and password are equal to doctor's details 
-    if (emailTextController.text == 'ak123@gmail.com' && passwordTextController.text == 'uninott123') {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ChatListPage()));
+
+      // Check if the email and password are equal to doctor's details
+      if (emailTextController.text == 'ak123@gmail.com' &&
+          passwordTextController.text == 'uninott123') {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => ChatListPage()),
+        );
       } else {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ScortenCalculatorPage()));
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => ScortenCalculatorPage()),
+        );
       }
     } on AppwriteException catch (e) {
       Navigator.pop(context);
@@ -60,20 +70,22 @@ class _LoginPageState extends State<LoginPage> {
 
   showAlert({required String title, required String text}) {
     showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text(title),
-            content: Text(text),
-            actions: [
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Text('Ok'))
-            ],
-          );
-        });
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(text),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('Ok'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   signInWithProvider(String provider) {
@@ -84,7 +96,7 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-	  @override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -124,9 +136,9 @@ class _LoginPageState extends State<LoginPage> {
               TextButton(
                 onPressed: () {
                   Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => RegisterPage()));
+                    context,
+                    MaterialPageRoute(builder: (context) => RegisterPage()),
+                  );
                 },
                 child: const Text('Create Account'),
               ),
