@@ -5,8 +5,10 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:appwrite/appwrite.dart';
+import 'package:segpnew/basePage.dart';
 import 'package:path/path.dart';
 import 'package:segpnew/constants/constants.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 
 class UploadPage extends StatefulWidget {
@@ -20,6 +22,8 @@ class _UploadPageState extends State<UploadPage> {
   final ImagePicker _picker = ImagePicker();
   late Client client;
   List<dynamic> _top3Predictions = [];
+  bool _isLoading = false;
+  final Color primaryColor = Color (0xFF53CADA);
 
   @override
   void initState() {
@@ -99,82 +103,137 @@ class _UploadPageState extends State<UploadPage> {
   }
 }
 
-@override
-Widget build(BuildContext context) {
-  return Scaffold(
-    appBar: AppBar(
-      title: const Text('Upload Image'),
-      backgroundColor: const Color(0xFF53CADA),
-    ),
-    body: Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          _imageFile != null
-              ? Column(
-                  children: [
-                    Image.file(
-                      File(_imageFile!.path),
-                    ),
-                    SizedBox(height: 20),
-                    Text(
-                      'Top 3 Predictions:',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    Column(
-                      children: _top3Predictions.map((prediction) {
-                        double confidence = prediction['confidence'] * 100;
-                        String shorterConfidence = confidence.toStringAsFixed(2);
-                        return Text(
-                          'Class: ${prediction['class']}, Confidence: $shorterConfidence%',
-                          style: TextStyle(fontSize: 20),
-                        );
-                      }).toList(),
-                    ),
-                  ],
-                )
-              : const Text('No image selected.'),
-          ElevatedButton(
-            onPressed: () async {
-              final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-              setState(() {
-                if (pickedFile != null) {
-                  _imageFile = pickedFile;
-                  uploadImageToAppwrite(pickedFile.path);
-                  uploadImageToRoboflow(pickedFile.path);
-                } else {
-                  print('No image selected.');
-                }
-              });
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF53CADA),
-              foregroundColor: Colors.white,
-            ),
-            child: const Text('Select Image'),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              final pickedFile = await _picker.pickImage(source: ImageSource.camera);
-              setState(() {
-                if (pickedFile != null) {
-                  _imageFile = pickedFile;
-                  uploadImageToAppwrite(pickedFile.path);
-                  uploadImageToRoboflow(pickedFile.path);
-                } else {
-                  print('No image selected.');
-                }
-              });
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF53CADA),
-              foregroundColor: Colors.white,
-            ),
-            child: const Text('Take Photo'),
-          ),
-        ],
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Upload Image'),
+        backgroundColor: primaryColor,
       ),
-    ),
-  );
-}
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0), // Add spacing around your elements
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              SizedBox(height: 20),
+              _imageFile != null
+                  ? Column(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                spreadRadius: 5,
+                                blurRadius: 7,
+                                offset: Offset(0, 3),
+                              ),
+                            ],
+                            shape: BoxShape.circle, // Display the image in a circular shape
+                          ),
+                          child: ClipOval( // Clip the image to a circle
+                            child: Image.file(
+                              File(_imageFile!.path),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 20),
+                        Text(
+                          'Top 3 Predictions:',
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        Column(
+                          children: _top3Predictions.map((prediction) {
+                            double confidence = prediction['confidence'] * 100;
+                            String shorterConfidence =
+                                confidence.toStringAsFixed(2);
+                            return Text(
+                              'Class: ${prediction['class']}, Confidence: $shorterConfidence%',
+                              style: TextStyle(fontSize: 20),
+                            );
+                          }).toList(),
+                        ),
+                      ],
+                    )
+                  : _isLoading
+                      ? SpinKitCircle(color: primaryColor)
+                      : const Text('No image selected.'),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () async {
+                  final pickedFile =
+                      await _picker.pickImage(source: ImageSource.gallery);
+                  setState(() {
+                    if (pickedFile != null) {
+                      _imageFile = pickedFile;
+                      uploadImageToAppwrite(pickedFile.path);
+                      uploadImageToRoboflow(pickedFile.path);
+                    } else {
+                      print('No image selected.');
+                    }
+                  });
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFF53CADA),
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18.0),
+                  ),
+                  elevation: 5, //Shadow effect
+                ),
+                child: const Text('Select Image'),
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () async {
+                  final pickedFile =
+                      await _picker.pickImage(source: ImageSource.camera);
+                  setState(() {
+                    if (pickedFile != null) {
+                      _imageFile = pickedFile;
+                      uploadImageToAppwrite(pickedFile.path);
+                      uploadImageToRoboflow(pickedFile.path);
+                    } else {
+                      print('No image selected.');
+                    }
+                  });
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: primaryColor,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18.0),
+                  ),
+                  elevation: 5,
+                ),
+                child: const Text('Take Photo'),
+              ),
+              SizedBox(height: 20),
+              Expanded(
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => BasePage(),
+                        ),
+                      );
+                    },
+                    child: Text('Next'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: primaryColor, // Dark blue button
+                      foregroundColor: Colors.white, // White text on button
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }

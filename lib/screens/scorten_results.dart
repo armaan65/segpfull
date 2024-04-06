@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:segpnew/basePage.dart';
+import 'package:segpnew/screens/upload_page.dart';
 
 class ScortenResultsPage extends StatefulWidget {
   final int scortenScore;
@@ -53,7 +54,7 @@ class _ScortenResultsPageState extends State<ScortenResultsPage> {
                     onPressed: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => BasePage(),
+                          builder: (context) => UploadPage(),
                           ),
                       );
                     },

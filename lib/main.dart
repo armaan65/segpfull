@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'screens/login_page.dart';
 import 'screens/register_page.dart';
 import 'package:flutter/material.dart';

@@ -28,7 +28,7 @@ class _RegisterPageState extends State<RegisterPage> {
       barrierDismissible: false,
       builder: (BuildContext context) {
         return Dialog(
-          backgroundColor: Colors.transparent, // Use transparent background
+          backgroundColor: Colors.transparent,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: const [
@@ -85,7 +85,7 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Create your account'), // Custom app bar title
+        title: const Text('Create your account'),
       ),
       body: Center(
         child: Padding(
@@ -116,7 +116,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   createAccount();
                 },
                 icon: const Icon(Icons.app_registration),
-                label: const Text('Sign up'), // Improved button label
+                label: const Text('Sign up'),
               ),
             ],
           ),

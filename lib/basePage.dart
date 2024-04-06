@@ -11,11 +11,10 @@ class BasePage extends StatefulWidget {
 class _BasePageState extends State<BasePage> {
   int _selectedIndex = 0;
 
-  // Include ProfilePage in the list of widgets
+
   static List<Widget> _widgetOptions = <Widget>[
-    UploadPage(),
     ChatPage(),
-    ProfilePage(), // Add ProfilePage here
+    ProfilePage(),
   ];
 
   void _onItemTapped(int index) {
@@ -30,10 +29,6 @@ class _BasePageState extends State<BasePage> {
       body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.camera),
-            label: 'Upload',
-          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.chat),
             label: 'Chat',
