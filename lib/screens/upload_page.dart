@@ -161,59 +161,65 @@ class _UploadPageState extends State<UploadPage> {
                       ? SpinKitCircle(color: primaryColor)
                       : const Text('No image selected.'),
               SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () async {
-                  final pickedFile =
-                      await _picker.pickImage(source: ImageSource.gallery);
-                  setState(() {
-                    if (pickedFile != null) {
-                      _imageFile = pickedFile;
-                      uploadImageToAppwrite(pickedFile.path);
-                      uploadImageToRoboflow(pickedFile.path);
-                    } else {
-                      print('No image selected.');
-                    }
-                  });
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF53CADA),
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(18.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget> [
+
+                  ElevatedButton(
+                    onPressed: () async {
+                      final pickedFile =
+                          await _picker.pickImage(source: ImageSource.gallery);
+                      setState(() {
+                        if (pickedFile != null) {
+                          _imageFile = pickedFile;
+                          uploadImageToAppwrite(pickedFile.path);
+                          uploadImageToRoboflow(pickedFile.path);
+                        } else {
+                          print('No image selected.');
+                        }
+                      });
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xFF53CADA),
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                      ),
+                      elevation: 5, //Shadow effect
+                    ),
+                    child: const Icon(Icons.photo_library),
                   ),
-                  elevation: 5, //Shadow effect
-                ),
-                child: const Text('Select Image'),
-              ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () async {
-                  final pickedFile =
-                      await _picker.pickImage(source: ImageSource.camera);
-                  setState(() {
-                    if (pickedFile != null) {
-                      _imageFile = pickedFile;
-                      uploadImageToAppwrite(pickedFile.path);
-                      uploadImageToRoboflow(pickedFile.path);
-                    } else {
-                      print('No image selected.');
-                    }
-                  });
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: primaryColor,
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(18.0),
+                  SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () async {
+                      final pickedFile =
+                          await _picker.pickImage(source: ImageSource.camera);
+                      setState(() {
+                        if (pickedFile != null) {
+                          _imageFile = pickedFile;
+                          uploadImageToAppwrite(pickedFile.path);
+                          uploadImageToRoboflow(pickedFile.path);
+                        } else {
+                          print('No image selected.');
+                        }
+                      });
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: primaryColor,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                      ),
+                      elevation: 5,
+                    ),
+                    child: const Icon(Icons.camera_alt),
                   ),
-                  elevation: 5,
-                ),
-                child: const Text('Take Photo'),
+                ],
               ),
               SizedBox(height: 20),
               Expanded(
                 child: Align(
-                  alignment: Alignment.bottomCenter,
+                  alignment: Alignment.bottomRight,
                   child: ElevatedButton(
                     onPressed: () {
                       Navigator.of(context).push(
@@ -222,7 +228,7 @@ class _UploadPageState extends State<UploadPage> {
                         ),
                       );
                     },
-                    child: Text('Next'),
+                    child: Icon(Icons.arrow_forward),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: primaryColor, // Dark blue button
                       foregroundColor: Colors.white, // White text on button
