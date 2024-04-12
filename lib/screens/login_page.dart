@@ -1,16 +1,12 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:segpnew/basePage.dart';
-import 'package:segpnew/screens/doctorui/chatlist.dart';
-import 'package:segpnew/screens/upload_page.dart';
-import 'package:appwrite/appwrite.dart';
-import 'package:segpnew/appwrite/auth_api.dart';
-import 'package:segpnew/screens/register_page.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:segpnew/screens/scorten.dart';
 import 'package:provider/provider.dart';
+import 'package:segpnew/appwrite/auth_api.dart';
+import 'package:segpnew/screens/doctorui/chatlist.dart';
+import 'package:segpnew/screens/register_page.dart';
+import 'package:segpnew/screens/scorten.dart';
+import 'package:appwrite/appwrite.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -23,18 +19,20 @@ class _LoginPageState extends State<LoginPage> {
   final emailTextController = TextEditingController();
   final passwordTextController = TextEditingController();
   bool loading = false;
+  bool _passwordVisible = false;
 
-  signIn() async {
+  void signIn() async {
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
         return Dialog(
-          backgroundColor: const Color.fromARGB(241, 0, 0, 0),
+          backgroundColor: Colors.black,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: const [
               CircularProgressIndicator(),
+              Text('Signing In...', style: TextStyle(color: Colors.white)),
             ],
           ),
         );
@@ -68,7 +66,7 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  showAlert({required String title, required String text}) {
+  void showAlert({required String title, required String text}) {
     showDialog(
       context: context,
       builder: (context) {
@@ -88,7 +86,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  signInWithProvider(String provider) {
+  void signInWithProvider(String provider) {
     try {
       context.read<AuthAPI>().signInWithProvider(provider: provider);
     } on AppwriteException catch (e) {
@@ -99,39 +97,88 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFFA7E6FF), // Light blue background
       appBar: AppBar(
-        title: const Text('Rash App'),
+        title: const Text('Rash App', style: TextStyle(color: Colors.black)), // Black text for AppBar title
+        backgroundColor: Color(0xFF53CADA), // Darker blue for the AppBar
+        iconTheme: IconThemeData(color: Colors.black), // Black icons for AppBar
       ),
       body: Center(
-        child: Padding(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.all(32.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              const SizedBox(height: 32),
               TextField(
                 controller: emailTextController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Email',
-                  border: OutlineInputBorder(),
+                  labelStyle: TextStyle(color: Colors.black), // Black text for labels
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                    borderSide: BorderSide(color: Colors.black), // Black border
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                    borderSide: BorderSide(color: Colors.black), // Black border when enabled
+                  ),
+                  prefixIcon: Icon(Icons.email, color: Colors.black), // Black email icon
+                  fillColor: Colors.white,
+                  filled: true, // White fill color for contrast
                 ),
+                style: TextStyle(color: Colors.black), // Black text for input
               ),
+
               const SizedBox(height: 16),
+
               TextField(
                 controller: passwordTextController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Password',
-                  border: OutlineInputBorder(),
+                  labelStyle: TextStyle(color: Colors.black), // Black text for labels
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                    borderSide: BorderSide(color: Colors.black), // Black border
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                    borderSide: BorderSide(color: Colors.black), // Black border when enabled
+                  ),
+                  prefixIcon: Icon(Icons.lock, color: Colors.black), // Black lock icon
+                  fillColor: Colors.white,
+                  filled: true, // White fill color for contrast
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _passwordVisible ? Icons.visibility_off : Icons.visibility,
+                      color: Colors.black, // Black visibility icon
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        // Toggle password visibility
+                        _passwordVisible = !_passwordVisible;
+                      });
+                    },
+                  ),
                 ),
-                obscureText: true,
+                style: TextStyle(color: Colors.black), // Black text for input
+                obscureText: !_passwordVisible,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 24),
               ElevatedButton.icon(
                 onPressed: () {
                   signIn();
                 },
-                icon: const Icon(Icons.login),
-                label: const Text("Sign in"),
+                icon: const Icon(Icons.login, color: Colors.white), // White login icon for contrast
+                label: const Text("Sign in", style: TextStyle(color: Colors.white)), // White text for button
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFF53CADA), // Dark blue button background color
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                ),
               ),
               TextButton(
                 onPressed: () {
@@ -140,7 +187,10 @@ class _LoginPageState extends State<LoginPage> {
                     MaterialPageRoute(builder: (context) => RegisterPage()),
                   );
                 },
-                child: const Text('Create Account'),
+                child: const Text('Create Account', style: TextStyle(color: Colors.white,)), // Dark blue text for link
+                style: TextButton.styleFrom(
+                  backgroundColor: Colors.black,
+                ),
               ),
               const SizedBox(height: 16),
             ],

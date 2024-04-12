@@ -10,7 +10,6 @@ import 'package:path/path.dart';
 import 'package:segpnew/constants/constants.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-
 class UploadPage extends StatefulWidget {
   const UploadPage({Key? key}) : super(key: key);
   @override
@@ -27,9 +26,9 @@ class _UploadPageState extends State<UploadPage> {
 
   @override
   void initState() {
-  super.initState();
-  initAppwrite();
-}
+    super.initState();
+    initAppwrite();
+  }
 
   void initAppwrite() {
     client = Client()
@@ -39,69 +38,50 @@ class _UploadPageState extends State<UploadPage> {
   }
 
   Future<void> uploadImageToRoboflow(String filePath) async {
-
-  const apiKey = roboflowApiKey;
-  
-   // Encode the image file in base64
-  File imageFile = File(filePath);
-  List<int> imageBytes= await imageFile.readAsBytes();
-  String base64Image = base64.encode(imageBytes);
-
-  var uploadURL = Uri.parse("https://raptor-trusting-pleasantly.ngrok-free.app/skin-classification4/5?api_key=$apiKey");
-
-  // Send the request
-  var response = await http.post(
-    uploadURL,
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    body: base64Image,
-  );
-
-
-  // Check the response and print it
-  if (response.statusCode == 200) {
-    print('Upload successful');
-    var responseJson = response.body;
-    
-    Map<String, dynamic> jsonResponse = json.decode(responseJson);
-
-    List<dynamic> predictions = jsonResponse['predictions'];
-    
-    predictions.sort((a, b) => b['confidence'].compareTo(a['confidence']));
-
-    List<dynamic> top3Predictions = predictions.take(3).toList();
-
-    setState(() {
-      _top3Predictions = top3Predictions;
-    });
-  } else {
-    print('Failed to upload image. Status code: ${response.statusCode}');
-    print('Response body: ${response.body}');
-    
-  }
-
+    const apiKey = roboflowApiKey;
+    File imageFile = File(filePath);
+    List<int> imageBytes= await imageFile.readAsBytes();
+    String base64Image = base64.encode(imageBytes);
+    var uploadURL = Uri.parse("https://raptor-trusting-pleasantly.ngrok-free.app/skin-classification4/5?api_key=$apiKey");
+    var response = await http.post(
+      uploadURL,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: base64Image,
+    );
+    if (response.statusCode == 200) {
+      print('Upload successful');
+      var responseJson = response.body;
+      Map<String, dynamic> jsonResponse = json.decode(responseJson);
+      List<dynamic> predictions = jsonResponse['predictions'];
+      predictions.sort((a, b) => b['confidence'].compareTo(a['confidence']));
+      List<dynamic> top3Predictions = predictions.take(3).toList();
+      setState(() {
+        _top3Predictions = top3Predictions;
+      });
+    } else {
+      print('Failed to upload image. Status code: ${response.statusCode}');
+      print('Response body: ${response.body}');
+    }
   }
 
   Future<void> uploadImageToAppwrite(String filePath) async {
-
-  try {
-    Storage storage = Storage(client);
-    var response = await storage.createFile(
-      bucketId: BUCKET_ID,
-      fileId: 'unique()',
-      file: InputFile.fromPath(
-        path: filePath,
-        filename: basename(filePath),
-      ),
-    );
-
-
-    print('File uploaded: ${response.toString()}'); 
-  } catch (e) {
-    print('Error uploading file: $e');
+    try {
+      Storage storage = Storage(client);
+      var response = await storage.createFile(
+        bucketId: BUCKET_ID,
+        fileId: 'unique()',
+        file: InputFile.fromPath(
+          path: filePath,
+          filename: basename(filePath),
+        ),
+      );
+      print('File uploaded: ${response.toString()}'); 
+    } catch (e) {
+      print('Error uploading file: $e');
+    }
   }
-}
 
   @override
   Widget build(BuildContext context) {
@@ -112,7 +92,7 @@ class _UploadPageState extends State<UploadPage> {
       ),
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.all(8.0), // Add spacing around your elements
+          padding: const EdgeInsets.all(8.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
@@ -130,12 +110,9 @@ class _UploadPageState extends State<UploadPage> {
                                 offset: Offset(0, 3),
                               ),
                             ],
-                            shape: BoxShape.circle, // Display the image in a circular shape
                           ),
-                          child: ClipOval( // Clip the image to a circle
-                            child: Image.file(
-                              File(_imageFile!.path),
-                            ),
+                          child: Image.file(
+                            File(_imageFile!.path),
                           ),
                         ),
                         SizedBox(height: 20),
@@ -143,6 +120,7 @@ class _UploadPageState extends State<UploadPage> {
                           'Top 3 Predictions:',
                           style: TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
                         ),
                         Column(
                           children: _top3Predictions.map((prediction) {
@@ -152,6 +130,7 @@ class _UploadPageState extends State<UploadPage> {
                             return Text(
                               'Class: ${prediction['class']}, Confidence: $shorterConfidence%',
                               style: TextStyle(fontSize: 20),
+                              textAlign: TextAlign.center,
                             );
                           }).toList(),
                         ),
@@ -164,7 +143,6 @@ class _UploadPageState extends State<UploadPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget> [
-
                   ElevatedButton(
                     onPressed: () async {
                       final pickedFile =
@@ -185,9 +163,10 @@ class _UploadPageState extends State<UploadPage> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(18.0),
                       ),
-                      elevation: 5, //Shadow effect
+                      elevation: 5,
+                      minimumSize: Size(100, 50),
                     ),
-                    child: const Icon(Icons.photo_library),
+                    child: const Icon(Icons.photo_library, size: 30),
                   ),
                   SizedBox(height: 20),
                   ElevatedButton(
@@ -211,8 +190,9 @@ class _UploadPageState extends State<UploadPage> {
                         borderRadius: BorderRadius.circular(18.0),
                       ),
                       elevation: 5,
+                      minimumSize: Size(100, 50),
                     ),
-                    child: const Icon(Icons.camera_alt),
+                    child: const Icon(Icons.camera_alt, size: 30),
                   ),
                 ],
               ),
@@ -230,8 +210,8 @@ class _UploadPageState extends State<UploadPage> {
                     },
                     child: Icon(Icons.arrow_forward),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: primaryColor, // Dark blue button
-                      foregroundColor: Colors.white, // White text on button
+                      backgroundColor: primaryColor,
+                      foregroundColor: Colors.white,
                     ),
                   ),
                 ),
