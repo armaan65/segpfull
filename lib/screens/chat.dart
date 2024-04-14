@@ -43,7 +43,7 @@ class _ChatPageState extends State<ChatPage> {
 
   void startFetchingMessages() {
     _timer.cancel();
-    _timer = Timer.periodic(Duration(seconds: 5), (timer) {
+    _timer = Timer.periodic(Duration(seconds: 3), (timer) {
       fetchAndSetMessages();
     });
   }

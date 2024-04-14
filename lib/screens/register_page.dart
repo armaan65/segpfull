@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:segpnew/screens/chat.dart';
-import 'package:appwrite/appwrite.dart';
+import 'package:provider/provider.dart';
 import 'package:segpnew/appwrite/auth_api.dart';
 import 'package:segpnew/screens/create_profile.dart';
-import 'package:segpnew/screens/login_page.dart';
-import 'package:segpnew/screens/register_page.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:provider/provider.dart';
+import 'package:appwrite/appwrite.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -20,6 +15,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final emailTextController = TextEditingController();
   final passwordTextController = TextEditingController();
   bool loading = false;
+  bool _passwordVisible = false; // Add this line for password visibility toggle
 
   // Function to create a new account
   createAccount() async {
@@ -84,11 +80,14 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFFA7E6FF), // Light blue background
       appBar: AppBar(
-        title: const Text('Create your account'),
+        title: const Text('Create your account', style: TextStyle(color: Colors.black)), // Black text for AppBar title
+        backgroundColor: Color(0xFF53CADA), // Darker blue for the AppBar
+        iconTheme: IconThemeData(color: Colors.black), // Black icons for AppBar
       ),
       body: Center(
-        child: Padding(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.all(32.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -96,28 +95,71 @@ class _RegisterPageState extends State<RegisterPage> {
             children: [
               TextField(
                 controller: emailTextController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Email',
-                  border: OutlineInputBorder(),
+                  labelStyle: TextStyle(color: Colors.black), // Black text for labels
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                    borderSide: BorderSide(color: Colors.black), // Black border
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                    borderSide: BorderSide(color: Colors.black), // Black border when enabled
+                  ),
+                  prefixIcon: Icon(Icons.email, color: Colors.black), // Black email icon
+                  fillColor: Colors.white,
+                  filled: true, // White fill color for contrast
                 ),
+                style: TextStyle(color: Colors.black), // Black text for input
               ),
               const SizedBox(height: 16),
               TextField(
                 controller: passwordTextController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Password',
-                  border: OutlineInputBorder(),
+                  labelStyle: TextStyle(color: Colors.black), // Black text for labels
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                    borderSide: BorderSide(color: Colors.black), // Black border
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                    borderSide: BorderSide(color: Colors.black), // Black border when enabled
+                  ),
+                  prefixIcon: Icon(Icons.lock, color: Colors.black), // Black lock icon
+                  fillColor: Colors.white,
+                  filled: true, // White fill color for contrast
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _passwordVisible ? Icons.visibility_off : Icons.visibility,
+                      color: Colors.black, // Black visibility icon
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _passwordVisible = !_passwordVisible;
+                      });
+                    },
+                  ),
                 ),
-                obscureText: true,
+                style: TextStyle(color: Colors.black), // Black text for input
+                obscureText: !_passwordVisible, // Toggle password visibility
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 24),
               ElevatedButton.icon(
                 onPressed: () {
                   createAccount();
                 },
-                icon: const Icon(Icons.app_registration),
-                label: const Text('Sign up'),
+                icon: const Icon(Icons.app_registration, color: Colors.white), // White icon for contrast
+                label: const Text("Sign up", style: TextStyle(color: Colors.white)), // White text for button
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFF53CADA), // Dark blue button background color
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                ),
               ),
+              const SizedBox(height: 16),
             ],
           ),
         ),
