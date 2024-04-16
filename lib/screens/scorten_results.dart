@@ -15,17 +15,17 @@ class _ScortenResultsPageState extends State<ScortenResultsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFA7E6FF), // Light blue background
+      backgroundColor: Color(0xFFA7E6FF),
       appBar: AppBar(
-        title: const Text('SCORTEN Results', style: TextStyle(color: Colors.black)), // Black text for AppBar title
-        backgroundColor: Color(0xFF53CADA), // Darker blue for the AppBar
-        iconTheme: IconThemeData(color: Colors.black), // Black icons for AppBar
+        title: const Text('SCORTEN Results', style: TextStyle(color: Colors.black)),
+        backgroundColor: Color(0xFF53CADA),
+        iconTheme: IconThemeData(color: Colors.black),
       ),
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
           child: Card(
-            color: Colors.white, // White card
+            color: Colors.white,
             elevation: 4.0,
             child: Padding(
               padding: const EdgeInsets.all(16.0),
@@ -37,7 +37,7 @@ class _ScortenResultsPageState extends State<ScortenResultsPage> {
                     style: const TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black, // Black text
+                      color: Colors.black,
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -46,7 +46,7 @@ class _ScortenResultsPageState extends State<ScortenResultsPage> {
                     style: const TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black, // Black text
+                      color: Colors.black,
                     ),
                   ),
                   const SizedBox(height: 24),
@@ -60,8 +60,8 @@ class _ScortenResultsPageState extends State<ScortenResultsPage> {
                     },
                     child: const Text('Next'),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFF53CADA), // Dark blue button background color
-                      foregroundColor: Colors.white, // Button text color
+                      backgroundColor: Color(0xFF53CADA),
+                      foregroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30.0),
                       ),

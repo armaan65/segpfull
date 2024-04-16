@@ -42,7 +42,7 @@ class _UploadPageState extends State<UploadPage> {
     File imageFile = File(filePath);
     List<int> imageBytes= await imageFile.readAsBytes();
     String base64Image = base64.encode(imageBytes);
-    var uploadURL = Uri.parse("https://raptor-trusting-pleasantly.ngrok-free.app/skin-classification4/5?api_key=$apiKey");
+    var uploadURL = Uri.parse("https://5086-203-217-129-141.ngrok-free.app/skin-classification4/5?api_key=$apiKey");
     var response = await http.post(
       uploadURL,
       headers: {

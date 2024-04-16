@@ -67,7 +67,7 @@ class _ScortenCalculatorPageState extends State<ScortenCalculatorPage> {
 
   Widget _buildSliderCard(String label, double currentValue, double min, double max, Function(double) onChanged) {
     return Card(
-      color: Colors.white, // Card background color
+      color: Colors.white,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
