@@ -47,7 +47,7 @@ class HomePage extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Text(
-                  "RashSight",
+                  "V-Skin",
                   style: GoogleFonts.montserrat(
                     fontSize: 50.0,
                     fontWeight: FontWeight.bold,
@@ -56,6 +56,8 @@ class HomePage extends StatelessWidget {
                 ),
               ),
             ),
+
+            Image.asset('assets/images/logo.png'),
 
             Positioned(
               left: 16.0,
