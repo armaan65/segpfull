@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:segpnew/scortenscoreprovider.dart';
 import 'package:segpnew/screens/scorten_results.dart';
 
 class ScortenCalculatorPage extends StatefulWidget {
-  const ScortenCalculatorPage({super.key});
+  const ScortenCalculatorPage({Key? key}) : super(key: key);
 
   @override
   _ScortenCalculatorPageState createState() => _ScortenCalculatorPageState();
@@ -30,37 +32,41 @@ class _ScortenCalculatorPageState extends State<ScortenCalculatorPage> {
         backgroundColor: Color(0xFF53CADA), // Darker blue for the AppBar
         iconTheme: IconThemeData(color: Colors.black), // Black icons for AppBar
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 20),
-              _buildSliderCard('Age', _currentAgeValue, 0, 100, (value) => _currentAgeValue = value),
-              _buildSliderCard('Malignancy', _currentMalignancyValue, 0, 1, (value) => _currentMalignancyValue = value),
-              _buildSliderCard('Heart Rate', _currentHeartRateValue, 0, 200, (value) => _currentHeartRateValue = value),
-              _buildSliderCard('Body Surface Area', _currentBsaValue, 0, 100, (value) => _currentBsaValue = value),
-              _buildSliderCard('Serum Urea', _currentUreaValue, 0, 50, (value) => _currentUreaValue = value),
-              _buildSliderCard('Serum Glucose', _currentGlucoseValue, 0, 50, (value) => _currentGlucoseValue = value),
-              _buildSliderCard('Serum Bicarbonate', _currentBicarbonateValue, 0, 50, (value) => _currentBicarbonateValue = value),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _isButtonDisabled ? null : _calculateResults,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF53CADA), // Dark blue button background color
-                  foregroundColor: Colors.white, // Button text color
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30.0),
+      body: Builder(
+        builder: (BuildContext context) { // This context has access to the Navigator
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(16.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 20),
+                  _buildSliderCard('Age', _currentAgeValue, 0, 100, (value) => _currentAgeValue = value),
+                  _buildSliderCard('Malignancy', _currentMalignancyValue, 0, 1, (value) => _currentMalignancyValue = value),
+                  _buildSliderCard('Heart Rate', _currentHeartRateValue, 0, 200, (value) => _currentHeartRateValue = value),
+                  _buildSliderCard('Body Surface Area', _currentBsaValue, 0, 100, (value) => _currentBsaValue = value),
+                  _buildSliderCard('Serum Urea', _currentUreaValue, 0, 50, (value) => _currentUreaValue = value),
+                  _buildSliderCard('Serum Glucose', _currentGlucoseValue, 0, 50, (value) => _currentGlucoseValue = value),
+                  _buildSliderCard('Serum Bicarbonate', _currentBicarbonateValue, 0, 50, (value) => _currentBicarbonateValue = value),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: _isButtonDisabled ? null : () => _calculateResults(context),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xFF53CADA), // Dark blue button background color
+                      foregroundColor: Colors.white, // Button text color
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                      ),
+                      padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                    ),
+                    child: const Text('Calculate'),
                   ),
-                  padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
-                ),
-                child: const Text('Calculate'),
+                ],
               ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }
@@ -95,7 +101,7 @@ class _ScortenCalculatorPageState extends State<ScortenCalculatorPage> {
     );
   }
 
-  void _calculateResults() {
+  void _calculateResults(BuildContext context) {
     setState(() => _isButtonDisabled = true); // Disable the button while calculating
     // Parse the input values
     int age = _currentAgeValue.round();
@@ -108,6 +114,11 @@ class _ScortenCalculatorPageState extends State<ScortenCalculatorPage> {
 
     // Calculate the SCORTEN score and risk factor
     int score = calculateScorten(age, malignancy, heartRate, bsa, urea, glucose, bicarbonate);
+
+    // Update the SCORTEN score in the provider
+    final scortenScoreProvider = Provider.of<ScortenScoreProvider>(context, listen: false);
+    scortenScoreProvider.scortenScore = score;
+
     double riskFactor = calculateRiskFactor(score);
 
     // Navigate to the results page with the calculated values

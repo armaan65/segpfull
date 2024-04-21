@@ -7,13 +7,19 @@ import 'package:provider/provider.dart';
 import 'package:segpnew/appwrite/auth_api.dart';
 import 'package:segpnew/screens/login_page.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:segpnew/scortenscoreprovider.dart';
 
 void main() {
-  runApp(MyApp());
-
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => AuthAPI(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => AuthAPI(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => ScortenScoreProvider(), // Add ScortenScoreProvider
+        ),
+      ],
       child: MyApp(),
     ),
   );
