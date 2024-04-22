@@ -13,7 +13,7 @@ class _BasePageState extends State<BasePage> {
 
 
   static List<Widget> _widgetOptions = <Widget>[
-    ChatPage(),
+    ChatPage(chatName: 'Chat'),
     ProfilePage(),
   ];
 

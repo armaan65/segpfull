@@ -7,6 +7,10 @@ import 'package:segpnew/constants/constants.dart';
 import 'package:provider/provider.dart';
 
 class ChatPage extends StatefulWidget {
+  final String chatName;
+
+  ChatPage({Key? key, required this.chatName}) : super(key: key);
+
   @override
   _ChatPageState createState() => _ChatPageState();
 }
@@ -95,59 +99,73 @@ class _ChatPageState extends State<ChatPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Doctor Chat')),
+      appBar: AppBar(
+        title: Text(widget.chatName),
+        backgroundColor: const Color(0xFF53CADA), // Darker shade for the AppBar
+      ),
       body: Column(
-        children: [
-          Expanded(
+        children: <Widget>[
+          Flexible(
             child: ListView.builder(
+              padding: const EdgeInsets.all(8.0),
+              reverse: true,
               itemCount: _messages.length,
-              itemBuilder: (context, index) {
-                final Document message = _messages[index];
-                final bool isSentByCurrentUser = message.data['user_id'] == currentUserEmail;
-
-                return Container(
-                  alignment: isSentByCurrentUser ? Alignment.centerRight : Alignment.centerLeft,
-                  padding: EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: isSentByCurrentUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        message.data['body'] ?? 'No text',
-                      ),
-                      Text(
-                        message.data['user_id'] ?? 'Unknown sender',
-                        style: TextStyle(fontSize: 12.0),
-                      ),
-                    ],
-                  ),
-                );
-              },
+              itemBuilder: (_, int index) => _buildMessage(_messages[index]),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _textController,
-                    decoration: InputDecoration(
-                      hintText: 'Type your message...',
-                    ),
-                  ),
-                ),
-                IconButton(
-                  icon: Icon(Icons.send),
-                  onPressed: () {
-                    final String messageBody = _textController.text;
-                    sendMessage(messageBody);
-                    _textController.clear();
-                  },
-                ),
-              ],
-            ),
+          const Divider(height: 1.0),
+          Container(
+            decoration: const BoxDecoration(color: Color(0xFFA7E6FF)), // Lighter shade for the input area
+            child: _buildTextComposer(),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildMessage(Document message) {
+    final bool isSentByCurrentUser = message.data['user_id'] == currentUserEmail;
+    return Container(
+      alignment: isSentByCurrentUser ? Alignment.centerRight : Alignment.centerLeft,
+      padding: EdgeInsets.all(8.0),
+      child: Column(
+        crossAxisAlignment: isSentByCurrentUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+        children: [
+          Text(
+            message.data['body'] ?? 'No text',
+          ),
+          Text(
+            message.data['user_id'] ?? 'Unknown sender',
+            style: TextStyle(fontSize: 12.0),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTextComposer() {
+    return IconTheme(
+      data: IconThemeData(color: Theme.of(context).colorScheme.secondary),
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: Row(
+          children: <Widget>[
+            Flexible(
+              child: TextField(
+                controller: _textController,
+                onSubmitted: sendMessage,
+                decoration: const InputDecoration.collapsed(hintText: "Send a message"),
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 4.0),
+              child: IconButton(
+                icon: const Icon(Icons.send),
+                onPressed: () => sendMessage(_textController.text),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
