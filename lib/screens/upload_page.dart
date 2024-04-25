@@ -42,7 +42,7 @@ class _UploadPageState extends State<UploadPage> {
     File imageFile = File(filePath);
     List<int> imageBytes= await imageFile.readAsBytes();
     String base64Image = base64.encode(imageBytes);
-    var uploadURL = Uri.parse("https://5086-203-217-129-141.ngrok-free.app/skin-classification4/5?api_key=$apiKey");
+    var uploadURL = Uri.parse("[1](https://5086-203-217-129-141.ngrok-free.app/skin-classification4/5?api_key=)$apiKey");
     var response = await http.post(
       uploadURL,
       headers: {
@@ -101,6 +101,8 @@ class _UploadPageState extends State<UploadPage> {
                   ? Column(
                       children: [
                         Container(
+                          width: MediaQuery.of(context).size.width, // This will take the full width of the screen
+                          height: MediaQuery.of(context).size.height * 0.5, // This will take half of the screen height
                           decoration: BoxDecoration(
                             boxShadow: [
                               BoxShadow(
@@ -113,6 +115,7 @@ class _UploadPageState extends State<UploadPage> {
                           ),
                           child: Image.file(
                             File(_imageFile!.path),
+                            fit: BoxFit.cover,
                           ),
                         ),
                         SizedBox(height: 20),
