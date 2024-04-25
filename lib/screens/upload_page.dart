@@ -42,7 +42,7 @@ class _UploadPageState extends State<UploadPage> {
     File imageFile = File(filePath);
     List<int> imageBytes= await imageFile.readAsBytes();
     String base64Image = base64.encode(imageBytes);
-    var uploadURL = Uri.parse("[1](https://5086-203-217-129-141.ngrok-free.app/skin-classification4/5?api_key=)$apiKey");
+    var uploadURL = Uri.parse("https://5086-203-217-129-141.ngrok-free.app/skin-classification4/5?api_key=$apiKey");
     var response = await http.post(
       uploadURL,
       headers: {
@@ -55,11 +55,21 @@ class _UploadPageState extends State<UploadPage> {
       var responseJson = response.body;
       Map<String, dynamic> jsonResponse = json.decode(responseJson);
       List<dynamic> predictions = jsonResponse['predictions'];
-      predictions.sort((a, b) => b['confidence'].compareTo(a['confidence']));
-      List<dynamic> top3Predictions = predictions.take(3).toList();
-      setState(() {
-        _top3Predictions = top3Predictions;
-      });
+
+      if (predictions.isEmpty) {
+        print('No predictions found.');
+        setState(() {
+          _top3Predictions = [
+            {'class': 'No predictions', 'confidence': 0.0}
+          ];
+        });
+      } else {
+        predictions.sort((a, b) => b['confidence'].compareTo(a['confidence']));
+        List<dynamic> top3Predictions = predictions.take(3).toList();
+        setState(() {
+          _top3Predictions = top3Predictions;
+        });
+      }
     } else {
       print('Failed to upload image. Status code: ${response.statusCode}');
       print('Response body: ${response.body}');
