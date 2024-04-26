@@ -18,6 +18,7 @@ class _ChatPageState extends State<ChatPage> {
   late Databases databases;
   late Timer _timer;
   String? currentUserEmail;
+  ScrollController _scrollController = ScrollController();  // Added ScrollController
 
   @override
   void initState() {
@@ -38,6 +39,7 @@ class _ChatPageState extends State<ChatPage> {
   @override
   void dispose() {
     _timer.cancel();
+    _scrollController.dispose();  // Dispose ScrollController
     super.dispose();
   }
 
@@ -61,6 +63,11 @@ class _ChatPageState extends State<ChatPage> {
       setState(() {
         _messages = documents.documents;
       });
+      _scrollController.animateTo(  // Scroll to bottom after fetching messages
+        _scrollController.position.maxScrollExtent,
+        duration: Duration(milliseconds: 500),
+        curve: Curves.easeOut,
+      );
     } catch (error) {
       print(error);
     }
@@ -100,6 +107,7 @@ class _ChatPageState extends State<ChatPage> {
         children: [
           Expanded(
             child: ListView.builder(
+              controller: _scrollController,  // Added ScrollController to ListView.builder
               itemCount: _messages.length,
               itemBuilder: (context, index) {
                 final Document message = _messages[index];
